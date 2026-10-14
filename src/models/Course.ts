@@ -85,12 +85,13 @@ CourseSchema.static(
     ]);
     try {
       const stats = obj[0];
-      if (!stats) {
-        throw new TypeError(`No courses found for academy ${String(academyId)}`);
-      }
-      await this.db.model("Academy").findByIdAndUpdate(academyId, {
-        averageCost: Math.ceil(stats.averageCost / 10) * 10,
-      });
+      // No courses left (after a delete): clear the average instead of keeping a stale one
+      await this.db.model("Academy").findByIdAndUpdate(
+        academyId,
+        stats
+          ? { averageCost: Math.ceil(stats.averageCost / 10) * 10 }
+          : { $unset: { averageCost: 1 } },
+      );
     } catch (error) {
       console.error(error);
     }
@@ -101,6 +102,15 @@ CourseSchema.static(
 CourseSchema.post("save", function () {
   void Course.getAverageCost(this.academy);
 });
+
+// Call getAverageCost after a course document is deleted
+CourseSchema.post(
+  "deleteOne",
+  { document: true, query: false },
+  async function () {
+    await Course.getAverageCost(this.academy);
+  },
+);
 
 const Course = mongoose.model<ICourse, CourseModel>("Course", CourseSchema);
 
