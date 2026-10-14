@@ -1,15 +1,15 @@
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const Course = require("../models/Course");
-const Bootcamp = require("../models/Bootcamp");
+const Academy = require("../models/Academy");
 
 // @desc   Get all courses
 // @route  GET /api/v1/courses
-// @route  GET /api/v1/bootcamps/:bootcampId/course
+// @route  GET /api/v1/academies/:academyId/course
 // @access Public
 exports.getCourses = asyncHandler(async (req, res, next) => {
-  if (req.params.bootcampId) {
-    const courses = await Course.find({ bootcamp: req.params.bootcampId });
+  if (req.params.academyId) {
+    const courses = await Course.find({ academy: req.params.academyId });
     res
       .status(200)
       .json({ success: true, count: courses.length, data: courses });
@@ -23,7 +23,7 @@ exports.getCourses = asyncHandler(async (req, res, next) => {
 // @access Public
 exports.getCourse = asyncHandler(async (req, res, next) => {
   const course = await Course.findById(req.params.id).populate({
-    path: "bootcamp",
+    path: "academy",
     select: "name description",
   });
 
@@ -37,26 +37,26 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
 });
 
 // @desc   Add course
-// @route  POST /api/v1/bootcamp/:bootcampId/courses
+// @route  POST /api/v1/academy/:academyId/courses
 // @access Private
 exports.addCourse = asyncHandler(async (req, res, next) => {
-  req.body.bootcamp = req.params.bootcampId;
+  req.body.academy = req.params.academyId;
   req.body.user = req.user.id;
 
-  const bootcamp = await Bootcamp.findById(req.params.bootcampId);
+  const academy = await Academy.findById(req.params.academyId);
 
-  if (!bootcamp) {
+  if (!academy) {
     return next(
-      new ErrorResponse(`No bootcamp with the id of ${req.params.bootcampId}`),
+      new ErrorResponse(`No academy with the id of ${req.params.academyId}`),
       404,
     );
   }
 
-  // Make sure user is bootcamp owner
-  if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+  // Make sure user is academy owner
+  if (academy.user.toString() !== req.user.id && req.user.role !== "admin") {
     return next(
       new ErrorResponse(
-        `User ${req.user.id} is not authorized to add a course to bootcamp ${bootcamp._id}`,
+        `User ${req.user.id} is not authorized to add a course to academy ${academy._id}`,
         401,
       ),
     );
