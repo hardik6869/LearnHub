@@ -42,8 +42,9 @@ export const getCourse = asyncHandler<unknown, IdParams>(async (req, res, next) 
   });
 
   if (!course) {
-    // Note: no status code is passed, so this responds 500 (see review)
-    return next(new ErrorResponse(`No Course with the id of ${req.params.id}`));
+    return next(
+      new ErrorResponse(`No Course with the id of ${req.params.id}`, 404),
+    );
   }
   res.status(200).json({ success: true, data: course });
 });
@@ -63,6 +64,7 @@ export const addCourse = asyncHandler<CourseBody, AcademyParams>(
       return next(
         new ErrorResponse(
           `No academy with the id of ${String(req.params.academyId)}`,
+          404,
         ),
       );
     }
@@ -92,7 +94,7 @@ export const updateCourse = asyncHandler<CourseBody, IdParams>(
 
     if (!course) {
       return next(
-        new ErrorResponse(`No course with the id of ${req.params.id}`),
+        new ErrorResponse(`No course with the id of ${req.params.id}`, 404),
       );
     }
 
@@ -123,7 +125,9 @@ export const deleteCourse = asyncHandler<unknown, IdParams>(async (req, res, nex
   const course = await Course.findById(req.params.id);
 
   if (!course) {
-    return next(new ErrorResponse(`No course with the id of ${req.params.id}`));
+    return next(
+      new ErrorResponse(`No course with the id of ${req.params.id}`, 404),
+    );
   }
 
   // Make sure user is course owner
