@@ -27,7 +27,6 @@ export const protect = asyncHandler(async (req, res, next) => {
   try {
     //verify Token
     const decoded = jwt.verify(token, process.env.JWT_SECRET ?? "");
-    console.log(decoded);
     const id =
       typeof decoded === "object" && typeof decoded.id === "string"
         ? decoded.id
