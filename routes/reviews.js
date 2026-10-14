@@ -18,7 +18,7 @@ const { protect, authorize } = require("../middleware/auth");
 router
   .route("/")
   .get(
-    advancedResult(Review, { path: "bootcamp", select: "name description" }),
+    advancedResult(Review, { path: "academy", select: "name description" }),
     getReviews,
   )
   .post(protect, authorize("user", "admin"), addReview);

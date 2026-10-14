@@ -1,6 +1,6 @@
-# DevCamper API
+# LearnHub API
 
-> Backend API for DevCamper application, which is a bootcamp directory website.
+> Backend API for LearnHub application, which is an academy directory website.
 
 ## Usage
 
@@ -24,3 +24,11 @@ npm start
 
 - Version: 1.0.0
 - License: MIT
+
+## API Endpoints
+
+Base URL: `/api/v1`
+
+- `/academies` — list/create academies; `/academies/:id` — get/update/delete; `/academies/:id/photo` — upload photo
+- `/academies/:academyId/courses` and `/academies/:academyId/reviews` — nested courses and reviews
+- `/courses`, `/reviews`, `/auth`, `/users`

@@ -6,17 +6,17 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config/config.env" });
 
 // load models
-const Bootcamp = require("./models/Bootcamp");
+const Academy = require("./models/Academy");
 const Course = require("./models/Course");
 const User = require("./models/User");
-const Review = require("./models//Review");
+const Review = require("./models/Review");
 
 // connect to DB
 mongoose.connect(process.env.MONGO_URI);
 
 /// Read JSON files
-const bootcamps = JSON.parse(
-  fs.readFileSync(`${__dirname}/_data/bootcamps.json`, "utf-8"),
+const academies = JSON.parse(
+  fs.readFileSync(`${__dirname}/_data/academies.json`, "utf-8"),
 );
 const courses = JSON.parse(
   fs.readFileSync(`${__dirname}/_data/courses.json`, "utf-8"),
@@ -31,7 +31,7 @@ const reviews = JSON.parse(
 // import into DB
 const importData = async () => {
   try {
-    await Bootcamp.create(bootcamps);
+    await Academy.create(academies);
     await Course.create(courses);
     await User.create(users);
     await Review.create(reviews);
@@ -45,7 +45,7 @@ const importData = async () => {
 // delete data
 const deleteData = async () => {
   try {
-    await Bootcamp.deleteMany();
+    await Academy.deleteMany();
     await Course.deleteMany();
     await User.deleteMany();
     await Review.deleteMany();

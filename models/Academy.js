@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
 
-const BootcampSchema = new mongoose.Schema(
+const AcademySchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -114,26 +114,26 @@ const BootcampSchema = new mongoose.Schema(
   },
 );
 
-// Create bootcamp slug from the name
-BootcampSchema.pre("save", function () {
+// Create academy slug from the name
+AcademySchema.pre("save", function () {
   this.slug = slugify(this.name, { lower: true });
 });
 
-// Cascade delete courses when a bootcamp is deleted
-BootcampSchema.pre(
+// Cascade delete courses when an academy is deleted
+AcademySchema.pre(
   "deleteOne",
   { document: true, query: false },
   async function () {
-    await this.model("Course").deleteMany({ bootcamp: this._id });
+    await this.model("Course").deleteMany({ academy: this._id });
   },
 );
 
 //Reverse Popuulate with Virtuals
-BootcampSchema.virtual("courses", {
+AcademySchema.virtual("courses", {
   ref: "Course",
   localField: "_id",
-  foreignField: "bootcamp",
+  foreignField: "academy",
   justOne: false,
 });
 
-module.exports = mongoose.model("Bootcamp", BootcampSchema);
+module.exports = mongoose.model("Academy", AcademySchema);

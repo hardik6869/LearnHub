@@ -20,7 +20,7 @@ dotenv.config({ path: "./config/config.env" });
 connectDB();
 
 // Route Files
-const bootcamps = require("./routes/bootcamps");
+const academies = require("./routes/academies");
 const courses = require("./routes/courses");
 const auth = require("./routes/auth");
 const users = require("./routes/users");
@@ -77,7 +77,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Mount Routers
-app.use("/api/v1/bootcamps", bootcamps);
+app.use("/api/v1/academies", academies);
 app.use("/api/v1/courses", courses);
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/users", users);

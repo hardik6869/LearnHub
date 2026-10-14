@@ -1,15 +1,15 @@
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const Review = require("../models/Review");
-const Bootcamp = require("../models/Bootcamp");
+const Academy = require("../models/Academy");
 
 // @desc   Get Reviews
 // @route  GET /api/v1/reviews
-// @route  GET /api/v1/bootcamps/:bootcampId/reviews
+// @route  GET /api/v1/academies/:academyId/reviews
 // @access Public
 exports.getReviews = asyncHandler(async (req, res, next) => {
-  if (req.params.bootcampId) {
-    const reviews = await Review.find({ bootcamp: req.params.bootcampId });
+  if (req.params.academyId) {
+    const reviews = await Review.find({ academy: req.params.academyId });
     res
       .status(200)
       .json({ success: true, count: reviews.length, data: reviews });
@@ -23,7 +23,7 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
 // @access Public
 exports.getReview = asyncHandler(async (req, res, next) => {
   const review = await Review.findById(req.params.id).populate({
-    path: "bootcamp",
+    path: "academy",
     select: "name description",
   });
 
@@ -37,18 +37,18 @@ exports.getReview = asyncHandler(async (req, res, next) => {
 });
 
 // @desc   Add Review
-// @route  POST /api/v1/reviews/:bootcampId/reviews
+// @route  POST /api/v1/reviews/:academyId/reviews
 // @access Private
 exports.addReview = asyncHandler(async (req, res, next) => {
-  req.body.bootcamp = req.params.bootcampId;
+  req.body.academy = req.params.academyId;
   req.body.user = req.user.id;
 
-  const bootcamp = await Bootcamp.findById(req.params.bootcampId);
+  const academy = await Academy.findById(req.params.academyId);
 
-  if (!bootcamp) {
+  if (!academy) {
     return next(
       new ErrorResponse(
-        `No bootcamp with the id of ${req.params.bootcampId}`,
+        `No academy with the id of ${req.params.academyId}`,
         404,
       ),
     );
