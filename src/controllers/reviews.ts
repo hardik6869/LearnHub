@@ -122,8 +122,7 @@ export const deleteReview = asyncHandler<unknown, IdParams>(async (req, res, nex
     return next(new ErrorResponse(`Not authorize to update review`, 401));
   }
 
-  // Note: model-level deleteOne() with no filter removes the first review in the collection (see review)
-  await Review.deleteOne();
+  await review.deleteOne();
 
   res.status(200).json({ success: true, data: {} });
 });
