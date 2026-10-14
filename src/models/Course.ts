@@ -1,0 +1,107 @@
+import mongoose, { HydratedDocument, Model, Types } from "mongoose";
+
+export type MinimumSkill = "beginner" | "intermediate" | "advanced";
+
+export interface ICourse {
+  title: string;
+  description: string;
+  weeks: string;
+  tuition: number;
+  minimumSkill: MinimumSkill;
+  scholarhipsAvailable: boolean;
+  createdAt: Date;
+  academy: Types.ObjectId;
+  user: Types.ObjectId;
+}
+
+export interface CourseModel extends Model<ICourse> {
+  getAverageCost(academyId: Types.ObjectId): Promise<void>;
+}
+
+export type CourseDocument = HydratedDocument<ICourse>;
+
+interface AverageCostResult {
+  _id: Types.ObjectId;
+  averageCost: number;
+}
+
+const CourseSchema = new mongoose.Schema<ICourse, CourseModel>({
+  title: {
+    type: String,
+    trim: true,
+    required: [true, "Please add a course title"],
+  },
+  description: {
+    type: String,
+    required: [true, "Please add a description"],
+  },
+  weeks: {
+    type: String,
+    required: [true, "Please add number of weeks"],
+  },
+  tuition: {
+    type: Number,
+    required: [true, "Please add a tution cost"],
+  },
+  minimumSkill: {
+    type: String,
+    required: [true, "Please add a minimum skill"],
+    enum: ["beginner", "intermediate", "advanced"],
+  },
+  scholarhipsAvailable: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  academy: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Academy",
+    required: true,
+  },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+    required: true,
+  },
+});
+
+// Static method to get avg of course tutions
+CourseSchema.static(
+  "getAverageCost",
+  async function (this: CourseModel, academyId: Types.ObjectId) {
+    const obj = await this.aggregate<AverageCostResult>([
+      {
+        $match: { academy: academyId },
+      },
+      {
+        $group: {
+          _id: "$academy",
+          averageCost: { $avg: "$tuition" },
+        },
+      },
+    ]);
+    try {
+      const stats = obj[0];
+      if (!stats) {
+        throw new TypeError(`No courses found for academy ${String(academyId)}`);
+      }
+      await this.db.model("Academy").findByIdAndUpdate(academyId, {
+        averageCost: Math.ceil(stats.averageCost / 10) * 10,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+);
+
+// Call getAverageCost after save
+CourseSchema.post("save", function () {
+  void Course.getAverageCost(this.academy);
+});
+
+const Course = mongoose.model<ICourse, CourseModel>("Course", CourseSchema);
+
+export default Course;

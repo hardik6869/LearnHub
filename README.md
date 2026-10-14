@@ -15,11 +15,31 @@ npm install
 ## Run App
 
 ```text
-# Run in Dev mode
+# Run in Dev mode (TypeScript via tsx, with watch)
 npm run dev
 
-# Run in Prod mode
+# Build to dist/ and run in Prod mode
+npm run build
 npm start
+```
+
+## Type Checking & Lint
+
+The source is strict TypeScript in `src/`, with no `any` (enforced by ESLint).
+
+```text
+npm run typecheck
+npm run lint
+```
+
+## Seed Database
+
+```text
+# Import data from _data/
+npm run seed:import
+
+# Destroy all data
+npm run seed:destroy
 ```
 
 - Version: 1.0.0
