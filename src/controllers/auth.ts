@@ -214,9 +214,6 @@ export const forgotPassword = asyncHandler<ForgotPasswordBody>(
       await user.save({ validateBeforeSave: false });
       return next(new ErrorResponse("Email could not be sent", 500));
     }
-
-    // Note: sends a second response after "Email Sent" (see review)
-    res.status(200).json({ success: true, data: user });
   },
 );
 
