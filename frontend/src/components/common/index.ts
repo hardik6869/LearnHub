@@ -5,6 +5,7 @@ export * from "./DataPagination";
 export * from "./EmptyState";
 export * from "./ErrorState";
 export * from "./form";
+export * from "./FormDialog";
 export * from "./LoadingState";
 export * from "./PageError";
 export * from "./PageHeader";

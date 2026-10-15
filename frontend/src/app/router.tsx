@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router";
 import { PageLoading } from "@/components/common";
 import { RootLayout } from "@/components/layout";
 import { ROUTE_PATHS } from "@/constants";
-import { ACADEMY_MANAGER_ROLES, RequireAuth, RequireGuest } from "@/features/auth";
+import { RequireAuth, RequireGuest } from "@/features/auth";
 import { NotFoundPage, RouteErrorPage } from "@/pages";
 
 // Pages are lazy-loaded by file path so each one becomes its own chunk.
@@ -79,27 +79,6 @@ export const router = createBrowserRouter([
                 path: ROUTE_PATHS.account,
                 lazy: async () => ({
                   Component: (await import("@/features/auth/pages/AccountPage")).AccountPage,
-                }),
-              },
-            ],
-          },
-
-          // Publishers and admins (ownership is checked on the edit page)
-          {
-            element: <RequireAuth roles={ACADEMY_MANAGER_ROLES} />,
-            children: [
-              {
-                path: ROUTE_PATHS.academyNew,
-                lazy: async () => ({
-                  Component: (await import("@/features/academies/pages/NewAcademyPage"))
-                    .NewAcademyPage,
-                }),
-              },
-              {
-                path: ROUTE_PATHS.academyEdit,
-                lazy: async () => ({
-                  Component: (await import("@/features/academies/pages/EditAcademyPage"))
-                    .EditAcademyPage,
                 }),
               },
             ],

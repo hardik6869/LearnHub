@@ -125,7 +125,9 @@ For a control without a wrapper, use `FormField` with a `render` function (it su
   `<Container>`. Check 375 px, 768 px and 1280 px, and 200% browser zoom.
 - Every page: `useDocumentTitle("…")`, `<PageHeader>`, and explicit loading
   (`LoadingState`), empty (`EmptyState`) and error (`ErrorState` with `onRetry={refetch}`) states.
-- Destructive actions confirm with `ConfirmDialog` (`destructive`, `isPending`).
+- Create/edit forms open in a `FormDialog` over the current page (not a separate route);
+  close it in the mutation's `onSuccess`. Destructive actions confirm with `ConfirmDialog`
+  (`destructive`, `isPending`).
 - Accessibility: follow the WCAG section below.
 - Performance: keep components small; derive values instead of syncing state; `memo` only for
   items rendered in long lists; never create query keys or objects inline in deps without need.

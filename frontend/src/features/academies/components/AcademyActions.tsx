@@ -1,22 +1,36 @@
 import { Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
-import { ConfirmDialog } from "@/components/common";
-import { Button } from "@/components/ui";
+import { useNavigate } from "react-router";
+import { ConfirmDialog, FormDialog } from "@/components/common";
+import { Button, Separator } from "@/components/ui";
 import { ROUTES } from "@/constants";
 import type { Academy } from "@/types";
-import { useDeleteAcademy } from "../hooks/useAcademyMutations";
+import { useDeleteAcademy, useUpdateAcademy } from "../hooks/useAcademyMutations";
+import { toAcademyFormValues, type AcademyFormValues } from "../schemas/academySchema";
+import { AcademyForm } from "./AcademyForm";
+import { AcademyPhotoUpload } from "./AcademyPhotoUpload";
 
-// Edit and Delete for the academy's owner or an admin (the caller checks canManage)
+type OpenDialog = "edit" | "delete" | null;
+
+// Edit (dialog with photo + details) and Delete (confirm) for the academy's owner or an admin;
+// the caller checks canManage
 export function AcademyActions({ academy }: { academy: Academy }) {
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState<OpenDialog>(null);
+  const updateAcademy = useUpdateAcademy(academy._id);
   const deleteAcademy = useDeleteAcademy();
   const navigate = useNavigate();
+
+  const close = () => setOpenDialog(null);
+  const toggle = (dialog: OpenDialog) => (open: boolean) => setOpenDialog(open ? dialog : null);
+
+  const handleUpdate = (values: AcademyFormValues) => {
+    updateAcademy.mutate(values, { onSuccess: close });
+  };
 
   const handleDelete = () => {
     deleteAcademy.mutate(academy._id, {
       onSuccess: () => {
-        setConfirmOpen(false);
+        close();
         void navigate(ROUTES.academies, { replace: true });
       },
     });
@@ -24,19 +38,38 @@ export function AcademyActions({ academy }: { academy: Academy }) {
 
   return (
     <>
-      <Button variant="outline" asChild>
-        <Link to={ROUTES.academyEdit(academy._id)}>
-          <Pencil aria-hidden />
-          Edit
-        </Link>
+      <Button variant="outline" onClick={() => setOpenDialog("edit")}>
+        <Pencil aria-hidden />
+        Edit
       </Button>
-      <Button variant="outline" onClick={() => setConfirmOpen(true)}>
+      <Button variant="outline" onClick={() => setOpenDialog("delete")}>
         <Trash2 aria-hidden />
         Delete
       </Button>
+
+      <FormDialog
+        open={openDialog === "edit"}
+        onOpenChange={toggle("edit")}
+        title="Edit academy"
+        description={academy.name}
+        size="lg"
+      >
+        <div className="space-y-6">
+          {/* The photo saves on its own, so it can be changed without touching the details */}
+          <AcademyPhotoUpload academy={academy} />
+          <Separator />
+          <AcademyForm
+            defaultValues={toAcademyFormValues(academy)}
+            onSubmit={handleUpdate}
+            isPending={updateAcademy.isPending}
+            submitLabel="Save changes"
+          />
+        </div>
+      </FormDialog>
+
       <ConfirmDialog
-        open={confirmOpen}
-        onOpenChange={setConfirmOpen}
+        open={openDialog === "delete"}
+        onOpenChange={toggle("delete")}
         title={`Delete ${academy.name}?`}
         description="This also deletes its courses. This can't be undone."
         confirmLabel="Delete academy"

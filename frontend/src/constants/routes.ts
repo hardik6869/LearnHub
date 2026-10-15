@@ -4,9 +4,7 @@ import type { Id } from "@/types";
 export const ROUTE_PATHS = {
   home: "/",
   academies: "/academies",
-  academyNew: "/academies/new",
   academyDetail: "/academies/:id",
-  academyEdit: "/academies/:id/edit",
   login: "/login",
   register: "/register",
   forgotPassword: "/forgot-password",
@@ -22,9 +20,7 @@ export const ROUTE_PATHS = {
 export const ROUTES = {
   home: ROUTE_PATHS.home,
   academies: ROUTE_PATHS.academies,
-  academyNew: ROUTE_PATHS.academyNew,
   academyDetail: (id: Id) => `/academies/${id}`,
-  academyEdit: (id: Id) => `/academies/${id}/edit`,
   login: ROUTE_PATHS.login,
   register: ROUTE_PATHS.register,
   forgotPassword: ROUTE_PATHS.forgotPassword,

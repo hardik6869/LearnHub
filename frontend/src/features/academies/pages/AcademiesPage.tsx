@@ -1,5 +1,5 @@
-import { Plus, SearchX } from "lucide-react";
-import { Link, useSearchParams } from "react-router";
+import { SearchX } from "lucide-react";
+import { useSearchParams } from "react-router";
 import {
   Container,
   DataPagination,
@@ -9,10 +9,11 @@ import {
   PageHeader,
 } from "@/components/common";
 import { Button } from "@/components/ui";
-import { DEFAULT_PAGE_SIZE, ROUTES } from "@/constants";
+import { DEFAULT_PAGE_SIZE } from "@/constants";
 import { ACADEMY_MANAGER_ROLES, hasRole, useCurrentUser } from "@/features/auth";
 import { useDocumentTitle } from "@/hooks";
 import { AcademyCard } from "../components/AcademyCard";
+import { AddAcademyButton } from "../components/AddAcademyButton";
 import { AcademyFilters, type AcademyFilterValues } from "../components/AcademyFilters";
 import { useAcademies } from "../hooks/useAcademies";
 
@@ -95,16 +96,7 @@ export function AcademiesPage() {
       <PageHeader
         title="Academies"
         description="Compare academies by career path and cost."
-        actions={
-          hasRole(user, ACADEMY_MANAGER_ROLES) && (
-            <Button asChild>
-              <Link to={ROUTES.academyNew}>
-                <Plus aria-hidden />
-                Add academy
-              </Link>
-            </Button>
-          )
-        }
+        actions={hasRole(user, ACADEMY_MANAGER_ROLES) && <AddAcademyButton />}
       />
       <AcademyFilters values={filters} onChange={setFilter} onReset={resetFilters} />
       {renderResults()}
