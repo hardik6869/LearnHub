@@ -24,9 +24,7 @@ const router = express.Router();
 router.use("/:academyId/courses", courseRouter);
 router.use("/:academyId/reviews", reviewRouter);
 
-router
-  .route("/:id/photo")
-  .put(protect, authorize("publisher", "admin"), academyPhotoUpload);
+router.route("/:id/photo").put(protect, authorize("publisher", "admin"), academyPhotoUpload);
 
 router
   .route("/")

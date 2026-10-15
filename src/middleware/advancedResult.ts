@@ -6,17 +6,13 @@ const advancedResults =
   <T>(model: Model<T>, populate?: string | PopulateOptions) =>
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     // Copy req.query, excluding the select/sort/page/limit fields
-    const { select, sort, page: pageParam, limit: limitParam, ...reqQuery } =
-      req.query;
+    const { select, sort, page: pageParam, limit: limitParam, ...reqQuery } = req.query;
 
     // Create query string
     let queryStr = JSON.stringify(reqQuery);
 
     // Create operators ($gt, $gte, etc)
-    queryStr = queryStr.replace(
-      /\b(gt|gte|lt|lte|in)\b/g,
-      (match) => `$${match}`,
-    );
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
 
     // The client-supplied filter, with operators rewritten above
     const filter = JSON.parse(queryStr) as QueryFilter<T>;
@@ -39,17 +35,14 @@ const advancedResults =
 
     // Pagination
     const page = parseInt(typeof pageParam === "string" ? pageParam : "", 10) || 1;
-    const limit =
-      parseInt(typeof limitParam === "string" ? limitParam : "", 10) || 25;
+    const limit = parseInt(typeof limitParam === "string" ? limitParam : "", 10) || 25;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const total = await model.countDocuments();
 
     query = query.skip(startIndex).limit(limit);
 
-    const results: unknown[] = populate
-      ? await query.populate([populate])
-      : await query;
+    const results: unknown[] = populate ? await query.populate([populate]) : await query;
 
     const pagination: Pagination = {};
 

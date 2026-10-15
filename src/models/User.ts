@@ -19,10 +19,7 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
       type: String,
       required: [true, "please addd an email"],
       unique: true,
-      match: [
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        "Please add a valid email",
-      ],
+      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Please add a valid email"],
     },
     role: {
       type: String,
@@ -63,10 +60,7 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
         const resetToken = crypto.randomBytes(20).toString("hex");
 
         // hash token and set to resetPasswordToken field
-        this.resetPasswordToken = crypto
-          .createHash("sha256")
-          .update(resetToken)
-          .digest("hex");
+        this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
 
         // Set Expire
         this.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000);

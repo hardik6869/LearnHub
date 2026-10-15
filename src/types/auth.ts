@@ -2,9 +2,7 @@ import type { IUser } from "./user";
 
 // Auth request bodies reuse the field types from IUser
 
-export type RegisterBody = Partial<
-  Pick<IUser, "name" | "email" | "password" | "role">
->;
+export type RegisterBody = Partial<Pick<IUser, "name" | "email" | "password" | "role">>;
 
 export type LoginBody = Partial<Pick<IUser, "email" | "password">>;
 

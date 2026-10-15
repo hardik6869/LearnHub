@@ -56,12 +56,12 @@ ReviewSchema.static(
     try {
       const stats = obj[0];
       // No reviews left (after a delete): clear the average instead of keeping a stale one
-      await this.db.model("Academy").findByIdAndUpdate(
-        academyId,
-        stats
-          ? { averageRating: stats.averageRating }
-          : { $unset: { averageRating: 1 } },
-      );
+      await this.db
+        .model("Academy")
+        .findByIdAndUpdate(
+          academyId,
+          stats ? { averageRating: stats.averageRating } : { $unset: { averageRating: 1 } },
+        );
     } catch (error) {
       console.error(error);
     }
@@ -74,13 +74,9 @@ ReviewSchema.post("save", function () {
 });
 
 // Call getAverageRating after a review document is deleted
-ReviewSchema.post(
-  "deleteOne",
-  { document: true, query: false },
-  async function () {
-    await Review.getAverageRating(this.academy);
-  },
-);
+ReviewSchema.post("deleteOne", { document: true, query: false }, async function () {
+  await Review.getAverageRating(this.academy);
+});
 
 const Review = mongoose.model<IReview, ReviewModel>("Review", ReviewSchema);
 

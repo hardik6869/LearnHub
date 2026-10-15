@@ -33,10 +33,7 @@ const AcademySchema = new mongoose.Schema<IAcademy, AcademyModel>(
     },
     email: {
       type: String,
-      match: [
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        "Please add a valid email",
-      ],
+      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Please add a valid email"],
     },
     address: {
       type: String,
@@ -115,13 +112,9 @@ AcademySchema.pre("save", function () {
 });
 
 // Cascade delete courses when an academy is deleted
-AcademySchema.pre(
-  "deleteOne",
-  { document: true, query: false },
-  async function () {
-    await this.model("Course").deleteMany({ academy: this._id });
-  },
-);
+AcademySchema.pre("deleteOne", { document: true, query: false }, async function () {
+  await this.model("Course").deleteMany({ academy: this._id });
+});
 
 //Reverse Popuulate with Virtuals
 AcademySchema.virtual("courses", {

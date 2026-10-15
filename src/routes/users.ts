@@ -1,12 +1,6 @@
 import express from "express";
 
-import {
-  getUser,
-  getUsers,
-  createUser,
-  deleteUser,
-  updateUser,
-} from "../controllers/users";
+import { getUser, getUsers, createUser, deleteUser, updateUser } from "../controllers/users";
 
 import User from "../models/User";
 
