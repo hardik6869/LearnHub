@@ -1,4 +1,5 @@
 export * from "./CheckboxField";
+export * from "./CheckboxGroupField";
 export * from "./FormField";
 export * from "./SelectField";
 export * from "./SubmitButton";

@@ -1,7 +1,5 @@
-import { ShieldX } from "lucide-react";
-import { Link, Navigate, Outlet, useLocation } from "react-router";
-import { Container, EmptyState, PageLoading } from "@/components/common";
-import { Button } from "@/components/ui";
+import { Navigate, Outlet, useLocation } from "react-router";
+import { AccessDenied, PageLoading } from "@/components/common";
 import { ROUTES } from "@/constants";
 import type { UserRole } from "@/enums";
 import { useCurrentUser } from "../hooks/useCurrentUser";
@@ -25,23 +23,7 @@ export function RequireAuth({ roles }: RequireAuthProps) {
     return <Navigate to={`${ROUTES.login}?redirect=${redirect}`} replace />;
   }
 
-  if (roles && !hasRole(user, roles)) {
-    return (
-      <Container className="py-16">
-        <EmptyState
-          headingLevel="h1"
-          icon={ShieldX}
-          title="Access denied"
-          description="Your account doesn't have permission to view this page."
-          action={
-            <Button asChild>
-              <Link to={ROUTES.home}>Back to home</Link>
-            </Button>
-          }
-        />
-      </Container>
-    );
-  }
+  if (roles && !hasRole(user, roles)) return <AccessDenied />;
 
   return <Outlet />;
 }
