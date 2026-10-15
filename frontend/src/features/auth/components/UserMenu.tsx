@@ -21,10 +21,8 @@ interface UserMenuProps {
   onNavigate?: () => void;
 }
 
-const USER_LINKS: readonly NavItem[] = [
-  { label: "Dashboard", to: ROUTES.dashboard },
-  { label: "Account", to: ROUTES.account },
-];
+// Dashboard is in the main nav (MainNav), so it isn't repeated here
+const USER_LINKS: readonly NavItem[] = [{ label: "Account", to: ROUTES.account }];
 
 // Signed-in actions: a dropdown in the header, plain links in the mobile menu
 export function UserMenu({ user, stacked = false, onNavigate }: UserMenuProps) {

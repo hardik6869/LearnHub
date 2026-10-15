@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { Container } from "@/components/common";
 import { Button, Card, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 import { APP_NAME, ROUTES } from "@/constants";
+import { useCurrentUser } from "@/features/auth";
 import { useDocumentTitle } from "@/hooks";
 
 const HIGHLIGHTS = [
@@ -25,6 +26,7 @@ const HIGHLIGHTS = [
 
 export function HomePage() {
   useDocumentTitle();
+  const { user } = useCurrentUser();
 
   return (
     <>
@@ -45,7 +47,11 @@ export function HomePage() {
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link to={ROUTES.register}>Create an account</Link>
+              {user ? (
+                <Link to={ROUTES.dashboard}>Go to dashboard</Link>
+              ) : (
+                <Link to={ROUTES.register}>Sign up</Link>
+              )}
             </Button>
           </div>
         </Container>

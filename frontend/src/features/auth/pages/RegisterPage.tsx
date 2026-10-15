@@ -4,10 +4,17 @@ import { Link, useSearchParams } from "react-router";
 import { SelectField, SubmitButton, TextField } from "@/components/common";
 import { FieldGroup } from "@/components/ui";
 import { ROUTES } from "@/constants";
-import { ASSIGNABLE_ROLE_OPTIONS, USER_ROLES } from "@/enums";
+import { USER_ROLES, type AssignableRole } from "@/enums";
+import type { SelectOption } from "@/types";
 import { AuthCard } from "../components/AuthCard";
 import { useRegister } from "../hooks/useAuthMutations";
 import { registerSchema, type RegisterValues } from "../schemas/authSchemas";
+
+// Says what each account type is for, so new users can choose without guessing
+const ACCOUNT_TYPE_OPTIONS: readonly SelectOption<AssignableRole>[] = [
+  { value: USER_ROLES.USER, label: "Student – review academies" },
+  { value: USER_ROLES.PUBLISHER, label: "Publisher – list my academy" },
+];
 
 export function RegisterPage() {
   const register = useRegister();
@@ -56,12 +63,11 @@ export function RegisterPage() {
           <SelectField
             control={form.control}
             name="role"
-            label="I want to"
-            options={ASSIGNABLE_ROLE_OPTIONS}
-            description="Students write reviews; publishers add academies and courses."
+            label="Account type"
+            options={ACCOUNT_TYPE_OPTIONS}
             required
           />
-          <SubmitButton isPending={register.isPending}>Create account</SubmitButton>
+          <SubmitButton isPending={register.isPending}>Sign up</SubmitButton>
         </FieldGroup>
       </form>
     </AuthCard>
