@@ -4,11 +4,14 @@
   "private": true,
   "description": "LearnHub, an academy directory website",
   "workspaces": [
-    "backend"
+    "backend",
+    "frontend"
   ],
   "scripts": {
     "dev:api": "npm run dev -w backend",
     "start:api": "npm start -w backend",
+    "dev:web": "npm run dev -w frontend",
+    "preview:web": "npm run preview -w frontend",
     "build": "npm run build --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
@@ -34,7 +37,8 @@
     "@commitlint/config-conventional": "^21.2.3",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
-    "prettier": "^3.9.10"
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1"
   },
   "lint-staged": {
     "*.{js,mjs,json,md,yml,yaml}": "prettier --write"
