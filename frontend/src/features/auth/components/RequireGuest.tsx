@@ -5,10 +5,10 @@ import { useCurrentUser } from "../hooks/useCurrentUser";
 
 // Only same-site paths: "//evil.com" or "https://…" would leave the app (open redirect)
 const getSafeRedirect = (value: string | null): string =>
-  value?.startsWith("/") && !value.startsWith("//") ? value : ROUTES.home;
+  value?.startsWith("/") && !value.startsWith("//") ? value : ROUTES.dashboard;
 
 // Layout route for the login/register/password pages. Once the user is signed in (including
-// right after a successful login) it sends them to ?redirect= or the home page.
+// right after a successful login) it sends them to ?redirect= or their dashboard.
 export function RequireGuest() {
   const { user, isLoading } = useCurrentUser();
   const [searchParams] = useSearchParams();

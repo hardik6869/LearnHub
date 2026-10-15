@@ -10,6 +10,10 @@ import type {
   ReviewPayload,
 } from "@/types";
 
+// All reviews; filter with params, e.g. { user: id } for one author's reviews
+export const getReviews = (params: ListParams): Promise<PaginatedResponse<Review>> =>
+  http.get<PaginatedResponse<Review>>(API_ROUTES.reviews.list, params);
+
 export const getAcademyReviews = (
   academyId: Id,
   params: ListParams,

@@ -1,5 +1,5 @@
 import { Pencil, Star, Trash2 } from "lucide-react";
-import { memo } from "react";
+import { memo, type ReactNode } from "react";
 import {
   Badge,
   Button,
@@ -15,10 +15,12 @@ import type { Review } from "@/types";
 
 interface ReviewCardProps {
   review: Review;
+  /** Replaces the "author · date" line, e.g. with the academy on the dashboard */
+  subtitle?: ReactNode;
   /** Shows Edit and Delete (the author or an admin) */
-  canEdit: boolean;
-  onEdit: (review: Review) => void;
-  onDelete: (review: Review) => void;
+  canEdit?: boolean;
+  onEdit?: (review: Review) => void;
+  onDelete?: (review: Review) => void;
 }
 
 // The list endpoint populates the author's name; a freshly created review only has the id
@@ -27,7 +29,8 @@ const getAuthorName = (review: Review): string =>
 
 export const ReviewCard = memo(function ReviewCard({
   review,
-  canEdit,
+  subtitle,
+  canEdit = false,
   onEdit,
   onDelete,
 }: ReviewCardProps) {
@@ -38,14 +41,14 @@ export const ReviewCard = memo(function ReviewCard({
           <h3>{review.title}</h3>
         </CardTitle>
         <CardDescription>
-          {getAuthorName(review)} · {formatDate(review.createdAt)}
+          {subtitle ?? `${getAuthorName(review)} · ${formatDate(review.createdAt)}`}
         </CardDescription>
         {canEdit && (
           <CardAction className="-my-1 flex gap-1">
             <Button
               variant="ghost"
               size="icon-sm"
-              onClick={() => onEdit(review)}
+              onClick={() => onEdit?.(review)}
               aria-label={`Edit review "${review.title}"`}
             >
               <Pencil aria-hidden />
@@ -53,7 +56,7 @@ export const ReviewCard = memo(function ReviewCard({
             <Button
               variant="ghost"
               size="icon-sm"
-              onClick={() => onDelete(review)}
+              onClick={() => onDelete?.(review)}
               aria-label={`Delete review "${review.title}"`}
             >
               <Trash2 aria-hidden />

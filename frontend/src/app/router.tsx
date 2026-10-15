@@ -76,6 +76,13 @@ export const router = createBrowserRouter([
             Component: RequireAuth,
             children: [
               {
+                path: ROUTE_PATHS.dashboard,
+                lazy: async () => ({
+                  Component: (await import("@/features/dashboard/pages/DashboardPage"))
+                    .DashboardPage,
+                }),
+              },
+              {
                 path: ROUTE_PATHS.account,
                 lazy: async () => ({
                   Component: (await import("@/features/auth/pages/AccountPage")).AccountPage,
