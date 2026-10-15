@@ -28,7 +28,7 @@ router.route("/:id/photo").put(protect, authorize("publisher", "admin"), academy
 
 router
   .route("/")
-  .get(advancedResult(Academy, "courses"), getAcademies)
+  .get(advancedResult(Academy, "courses", { searchField: "name" }), getAcademies)
   .post(protect, authorize("publisher", "admin"), createAcademy);
 router
   .route("/:id")

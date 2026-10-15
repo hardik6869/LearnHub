@@ -52,7 +52,9 @@ Paths below are relative to `backend/`.
   body. Never pass `req.body` straight to `create`/`findByIdAndUpdate`.
 - Nested routers use `express.Router({ mergeParams: true })`. List endpoints use the
   `advancedResult` middleware, which relies on the `"extended"` query parser set in `server.ts`.
-  It never lets clients select or filter `select: false` fields (`HIDDEN_FIELDS`).
+  It never lets clients select or filter `select: false` fields (`HIDDEN_FIELDS`). `?search=`
+  works only where a route passes `{ searchField }` (academies: `name`); the term is
+  regex-escaped and length-capped — never build a `$regex` from raw input.
 - `server.ts` sanitises a copy of `req.query` and pins it on the request (Express 5's
   `req.query` is a re-parsing getter, so in-place sanitising does nothing) — keep that middleware
   before anything that reads `req.query`.

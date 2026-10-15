@@ -12,11 +12,28 @@ const isAllowedSelectField = (field: string): boolean => {
   return field !== "" && !field.startsWith("+") && !HIDDEN_FIELDS.has(name);
 };
 
+// Longest ?search= term used; longer input is cut, so a huge term can't make a slow regex
+const MAX_SEARCH_LENGTH = 100;
+
+// Escapes regex metacharacters so a search term is matched literally ("c++" → /c\+\+/)
+const escapeRegex = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+interface AdvancedResultOptions {
+  /** Field matched case-insensitively by ?search=…, e.g. "name". Without it, search is ignored. */
+  searchField?: string;
+}
+
 const advancedResults =
-  <T>(model: Model<T>, populate?: string | PopulateOptions | PopulateOptions[]) =>
+  <T>(
+    model: Model<T>,
+    populate?: string | PopulateOptions | PopulateOptions[],
+    { searchField }: AdvancedResultOptions = {},
+  ) =>
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    // Copy req.query, excluding the select/sort/page/limit fields and any hidden field
-    const { select, sort, page: pageParam, limit: limitParam, ...queryFields } = req.query;
+    // Copy req.query, excluding the select/sort/page/limit/search fields and any hidden field.
+    // `search` is taken out before the operator rewrite below, which would otherwise turn a
+    // search for "in" into "$in".
+    const { select, sort, page: pageParam, limit: limitParam, search, ...queryFields } = req.query;
     const reqQuery = Object.fromEntries(
       Object.entries(queryFields).filter(([key]) => !HIDDEN_FIELDS.has(key)),
     );
@@ -30,9 +47,14 @@ const advancedResults =
     // The client-supplied filter, with operators rewritten above. Nested routes
     // (/academies/:academyId/courses|reviews) are always limited to that academy.
     const { academyId } = req.params;
+    const searchTerm = typeof search === "string" ? search.trim().slice(0, MAX_SEARCH_LENGTH) : "";
     const filter = {
       ...(JSON.parse(queryStr) as QueryFilter<T>),
       ...(academyId ? { academy: academyId } : {}),
+      // Built here from an escaped string, never from client-supplied operators
+      ...(searchField && searchTerm
+        ? { [searchField]: { $regex: escapeRegex(searchTerm), $options: "i" } }
+        : {}),
     } as QueryFilter<T>;
 
     // Finding resource
