@@ -2,7 +2,8 @@ import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import asyncHandler from "./async";
 import ErrorResponse from "../utils/errorResponse";
-import User, { UserDocument, UserRole } from "../models/User";
+import User from "../models/User";
+import type { UserDocument, UserRole } from "../types";
 
 // Protect Routes
 export const protect = asyncHandler(async (req, res, next) => {
@@ -40,9 +41,7 @@ export const protect = asyncHandler(async (req, res, next) => {
 
 // The user set by `protect`. Before `protect` runs, or when the token's user
 // no longer exists, this throws (surfaced as a 500, as before the TS migration).
-export const getAuthUser = (req: {
-  user?: UserDocument | null;
-}): UserDocument => {
+export const getAuthUser = (req: Pick<Request, "user">): UserDocument => {
   if (!req.user) {
     throw new TypeError("Cannot read properties of null: no authenticated user");
   }

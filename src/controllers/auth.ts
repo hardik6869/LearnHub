@@ -3,42 +3,18 @@ import type { CookieOptions, Response } from "express";
 import ErrorResponse from "../utils/errorResponse";
 import asyncHandler from "../middleware/async";
 import { getAuthUser } from "../middleware/auth";
-import User, { UserDocument, UserRole } from "../models/User";
+import User from "../models/User";
 import sendEmail from "../utils/sendEmail";
-
-interface RegisterBody {
-  name?: string;
-  email?: string;
-  password?: string;
-  role?: UserRole;
-}
-
-interface LoginBody {
-  email?: string;
-  password?: string;
-}
-
-interface UpdateDetailsBody {
-  name?: string;
-  email?: string;
-}
-
-interface UpdatePasswordBody {
-  currentPassword: string;
-  newPassword: string;
-}
-
-interface ForgotPasswordBody {
-  email?: string;
-}
-
-interface ResetPasswordParams {
-  resettoken: string;
-}
-
-interface ResetPasswordBody {
-  password: string;
-}
+import type {
+  ForgotPasswordBody,
+  LoginBody,
+  RegisterBody,
+  ResetPasswordBody,
+  ResetPasswordParams,
+  UpdateDetailsBody,
+  UpdatePasswordBody,
+  UserDocument,
+} from "../types";
 
 // @desc   Register user
 // @route  POST /api/v1/auth/register

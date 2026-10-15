@@ -1,11 +1,6 @@
-import type { NextFunction, Request, RequestHandler, Response } from "express";
+import type { RequestHandler } from "express";
 import type { ParamsDictionary } from "express-serve-static-core";
-
-type AsyncRequestHandler<ReqBody, P> = (
-  req: Request<P, unknown, ReqBody>,
-  res: Response,
-  next: NextFunction,
-) => Promise<unknown>;
+import type { AsyncRequestHandler } from "../types";
 
 const asyncHandler =
   <ReqBody = unknown, P = ParamsDictionary>(

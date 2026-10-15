@@ -1,22 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import type { Model, PopulateOptions, QueryFilter } from "mongoose";
-
-interface PageInfo {
-  page: number;
-  limit: number;
-}
-
-export interface Pagination {
-  next?: PageInfo;
-  prev?: PageInfo;
-}
-
-export interface AdvancedResults {
-  success: true;
-  count: number;
-  pagination: Pagination;
-  data: unknown[];
-}
+import type { Pagination } from "../types";
 
 const advancedResults =
   <T>(model: Model<T>, populate?: string | PopulateOptions) =>

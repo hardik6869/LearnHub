@@ -1,12 +1,7 @@
 import nodemailer from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import type SMTPPool from "nodemailer/lib/smtp-pool";
-
-export interface EmailOptions {
-  to: string;
-  subject: string;
-  message: string;
-}
+import type { EmailOptions } from "../types";
 
 const sendEmail = async (options: EmailOptions): Promise<void> => {
   // Note: maxConnections/maxMessages are SMTP pool options and only take effect with `pool: true` (see review)

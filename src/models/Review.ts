@@ -1,24 +1,5 @@
-import mongoose, { HydratedDocument, Model, Types } from "mongoose";
-
-export interface IReview {
-  title: string;
-  text: string;
-  rating: number;
-  createdAt: Date;
-  academy: Types.ObjectId;
-  user: Types.ObjectId;
-}
-
-export interface ReviewModel extends Model<IReview> {
-  getAverageRating(academyId: Types.ObjectId): Promise<void>;
-}
-
-export type ReviewDocument = HydratedDocument<IReview>;
-
-interface AverageRatingResult {
-  _id: Types.ObjectId;
-  averageRating: number;
-}
+import mongoose, { type Types } from "mongoose";
+import type { AverageRatingResult, IReview, ReviewModel } from "../types";
 
 const ReviewSchema = new mongoose.Schema<IReview, ReviewModel>({
   title: {

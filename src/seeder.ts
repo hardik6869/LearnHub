@@ -6,22 +6,16 @@ import dotenv from "dotenv";
 import { ROOT_DIR } from "./config/paths";
 
 // load models
-import Academy, { IAcademy } from "./models/Academy";
-import Course, { ICourse } from "./models/Course";
-import User, { IUser } from "./models/User";
-import Review, { IReview } from "./models/Review";
+import Academy from "./models/Academy";
+import Course from "./models/Course";
+import User from "./models/User";
+import Review from "./models/Review";
+import type { IAcademy, ICourse, IReview, IUser, Seed } from "./types";
 
 dotenv.config({ path: "./config/config.env" });
 
 // connect to DB
 void mongoose.connect(process.env.MONGO_URI ?? "");
-
-// Seed documents as stored in _data/*.json (ids and refs are plain strings)
-type Seed<T> = Omit<T, "user" | "academy" | "createdAt"> & {
-  _id: string;
-  user?: string;
-  academy?: string;
-};
 
 /// Read JSON files
 const readSeed = <T>(file: string): Seed<T>[] => {

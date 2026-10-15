@@ -1,21 +1,9 @@
 import ErrorResponse from "../utils/errorResponse";
 import asyncHandler from "../middleware/async";
 import { getAuthUser } from "../middleware/auth";
-import Review, { IReview } from "../models/Review";
+import Review from "../models/Review";
 import Academy from "../models/Academy";
-
-type ReviewBody = Partial<Omit<IReview, "academy" | "user">> & {
-  academy?: string;
-  user?: string;
-};
-
-interface IdParams {
-  id: string;
-}
-
-interface AcademyParams {
-  academyId?: string;
-}
+import type { AcademyParams, IdParams, ReviewBody } from "../types";
 
 // @desc   Get Reviews
 // @route  GET /api/v1/reviews

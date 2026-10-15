@@ -1,29 +1,9 @@
 import crypto from "crypto";
-import mongoose, { HydratedDocument, Model } from "mongoose";
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt, { SignOptions } from "jsonwebtoken";
-
-// Roles checked by `authorize`. Note: the schema enum below only accepts "user" | "publisher".
-export type UserRole = "user" | "publisher" | "admin";
-
-export interface IUser {
-  name: string;
-  email: string;
-  role: UserRole;
-  password: string;
-  resetPasswordToken?: string;
-  resetPasswordExpire?: Date;
-  createdAt: Date;
-}
-
-export interface IUserMethods {
-  getSignedJwtToken(): string;
-  matchPassword(enteredPassword: string): Promise<boolean>;
-  getResetPasswordToken(): string;
-}
-
-export type UserModel = Model<IUser, object, IUserMethods>;
-export type UserDocument = HydratedDocument<IUser, IUserMethods>;
+import { ASSIGNABLE_ROLES } from "../config/enums";
+import type { IUser, IUserMethods, UserModel } from "../types";
 
 const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
   {
@@ -46,7 +26,7 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
     },
     role: {
       type: String,
-      enum: ["user", "publisher"],
+      enum: ASSIGNABLE_ROLES,
       default: "user",
     },
     password: {

@@ -1,15 +1,10 @@
 import path from "path";
 import type { UploadedFile } from "express-fileupload";
-import Academy, { IAcademy } from "../models/Academy";
+import Academy from "../models/Academy";
 import ErrorResponse from "../utils/errorResponse";
 import asyncHandler from "../middleware/async";
 import { getAuthUser } from "../middleware/auth";
-
-type AcademyBody = Partial<Omit<IAcademy, "user">> & { user?: string };
-
-interface IdParams {
-  id: string;
-}
+import type { AcademyBody, IdParams } from "../types";
 
 // @desc   Get all academies
 // @route  GET /api/v1/academies

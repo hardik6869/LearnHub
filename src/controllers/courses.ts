@@ -1,21 +1,9 @@
 import ErrorResponse from "../utils/errorResponse";
 import asyncHandler from "../middleware/async";
 import { getAuthUser } from "../middleware/auth";
-import Course, { ICourse } from "../models/Course";
+import Course from "../models/Course";
 import Academy from "../models/Academy";
-
-type CourseBody = Partial<Omit<ICourse, "academy" | "user">> & {
-  academy?: string;
-  user?: string;
-};
-
-interface IdParams {
-  id: string;
-}
-
-interface AcademyParams {
-  academyId?: string;
-}
+import type { AcademyParams, CourseBody, IdParams } from "../types";
 
 // @desc   Get all courses
 // @route  GET /api/v1/courses

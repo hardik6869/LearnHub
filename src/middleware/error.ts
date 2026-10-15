@@ -1,14 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import ErrorResponse from "../utils/errorResponse";
-
-// Shape of the errors this handler inspects (ErrorResponse, Mongoose and MongoDB errors)
-interface ErrorDetails {
-  name?: string;
-  message?: string;
-  code?: number;
-  statusCode?: number;
-  errors?: Record<string, { message: string }>;
-}
+import type { ErrorDetails } from "../types";
 
 const toErrorDetails = (err: unknown): ErrorDetails =>
   typeof err === "object" && err !== null ? err : {};

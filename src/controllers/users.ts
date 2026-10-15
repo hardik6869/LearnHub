@@ -1,11 +1,6 @@
 import asyncHandler from "../middleware/async";
-import User, { IUser } from "../models/User";
-
-type UserBody = Partial<IUser>;
-
-interface IdParams {
-  id: string;
-}
+import User from "../models/User";
+import type { IdParams, UserBody } from "../types";
 
 // @desc   Get all users
 // @route  GET /api/v1/auth/users

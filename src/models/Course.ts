@@ -1,29 +1,6 @@
-import mongoose, { HydratedDocument, Model, Types } from "mongoose";
-
-export type MinimumSkill = "beginner" | "intermediate" | "advanced";
-
-export interface ICourse {
-  title: string;
-  description: string;
-  weeks: string;
-  tuition: number;
-  minimumSkill: MinimumSkill;
-  scholarhipsAvailable: boolean;
-  createdAt: Date;
-  academy: Types.ObjectId;
-  user: Types.ObjectId;
-}
-
-export interface CourseModel extends Model<ICourse> {
-  getAverageCost(academyId: Types.ObjectId): Promise<void>;
-}
-
-export type CourseDocument = HydratedDocument<ICourse>;
-
-interface AverageCostResult {
-  _id: Types.ObjectId;
-  averageCost: number;
-}
+import mongoose, { type Types } from "mongoose";
+import { MINIMUM_SKILLS } from "../config/enums";
+import type { AverageCostResult, CourseModel, ICourse } from "../types";
 
 const CourseSchema = new mongoose.Schema<ICourse, CourseModel>({
   title: {
@@ -46,7 +23,7 @@ const CourseSchema = new mongoose.Schema<ICourse, CourseModel>({
   minimumSkill: {
     type: String,
     required: [true, "Please add a minimum skill"],
-    enum: ["beginner", "intermediate", "advanced"],
+    enum: MINIMUM_SKILLS,
   },
   scholarhipsAvailable: {
     type: Boolean,

@@ -1,36 +1,7 @@
-import mongoose, { HydratedDocument, Model, Types } from "mongoose";
+import mongoose from "mongoose";
 import slugify from "slugify";
-
-export type Career =
-  | "Web Development"
-  | "Mobile Development"
-  | "UI/UX"
-  | "Data Science"
-  | "Business"
-  | "Other";
-
-export interface IAcademy {
-  name: string;
-  slug?: string;
-  description: string;
-  website?: string;
-  phone?: string;
-  email?: string;
-  address: string;
-  careers: Career[];
-  averageRating?: number;
-  averageCost?: number;
-  photo: string;
-  housing: boolean;
-  jobAssistance: boolean;
-  jobGuarantee: boolean;
-  acceptGi: boolean;
-  createdAt: Date;
-  user: Types.ObjectId;
-}
-
-export type AcademyModel = Model<IAcademy>;
-export type AcademyDocument = HydratedDocument<IAcademy>;
+import { CAREERS } from "../config/enums";
+import type { AcademyModel, IAcademy } from "../types";
 
 const AcademySchema = new mongoose.Schema<IAcademy, AcademyModel>(
   {
@@ -94,14 +65,7 @@ const AcademySchema = new mongoose.Schema<IAcademy, AcademyModel>(
       // Array of strings
       type: [String],
       required: true,
-      enum: [
-        "Web Development",
-        "Mobile Development",
-        "UI/UX",
-        "Data Science",
-        "Business",
-        "Other",
-      ],
+      enum: CAREERS,
     },
     averageRating: {
       type: Number,

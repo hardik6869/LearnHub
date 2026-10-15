@@ -1,5 +1,4 @@
-import type { AdvancedResults } from "../middleware/advancedResult";
-import type { UserDocument } from "../models/User";
+import type { AdvancedResults, UserDocument } from "./index";
 
 declare global {
   namespace Express {
