@@ -17,17 +17,6 @@ export interface AcademyFilterValues {
 
 export type AcademyFilterKey = keyof AcademyFilterValues;
 
-// Filters counted on the mobile "Filters" button (search and sort are always visible)
-const PANEL_KEYS: readonly AcademyFilterKey[] = [
-  "career",
-  "maxCost",
-  "minRating",
-  "housing",
-  "jobAssistance",
-  "jobGuarantee",
-  "acceptGi",
-];
-
 const toNumberFilter = (value: string, operator: "lte" | "gte") =>
   value ? { [operator]: Number(value) } : undefined;
 
@@ -88,8 +77,8 @@ export function useAcademyListParams() {
 
   const resetFilters = () => setSearchParams({});
 
-  const panelFilterCount = PANEL_KEYS.filter((key) => filters[key]).length;
-  const isFiltered = Boolean(filters.search) || panelFilterCount > 0;
+  // Sort only orders the results, so it doesn't count as a filter
+  const isFiltered = Object.entries(filters).some(([key, value]) => key !== "sort" && value);
 
-  return { page, filters, params, setFilter, setPage, resetFilters, panelFilterCount, isFiltered };
+  return { page, filters, params, setFilter, setPage, resetFilters, isFiltered };
 }

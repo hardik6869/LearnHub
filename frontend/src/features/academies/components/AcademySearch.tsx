@@ -28,7 +28,7 @@ export function AcademySearch({ value, onSearch }: AcademySearchProps) {
   }, [debounced, text, value, onSearch]);
 
   return (
-    <div className="relative flex-1">
+    <div className="relative min-w-full flex-1 md:min-w-64">
       <label htmlFor="academy-search" className="sr-only">
         Search academies by name
       </label>

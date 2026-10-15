@@ -16,7 +16,6 @@ import { AcademyFilters } from "../components/AcademyFilters";
 import { AcademySearch } from "../components/AcademySearch";
 import { AddAcademyButton } from "../components/AddAcademyButton";
 import { FilterSelect } from "../components/FilterSelect";
-import { MobileFiltersButton } from "../components/MobileFiltersButton";
 import { useAcademies } from "../hooks/useAcademies";
 import { useAcademyListParams } from "../hooks/useAcademyListParams";
 
@@ -31,7 +30,7 @@ const SORT_OPTIONS: readonly SelectOption[] = [
 export function AcademiesPage() {
   useDocumentTitle("Academies");
   const { user } = useCurrentUser();
-  const { page, filters, params, setFilter, setPage, resetFilters, panelFilterCount, isFiltered } =
+  const { page, filters, params, setFilter, setPage, resetFilters, isFiltered } =
     useAcademyListParams();
   const { data, isPending, isError, isPlaceholderData, refetch } = useAcademies(params);
 
@@ -40,18 +39,8 @@ export function AcademiesPage() {
     window.scrollTo({ top: 0 });
   };
 
-  const renderFilters = (idPrefix: string) => (
-    <AcademyFilters
-      idPrefix={idPrefix}
-      values={filters}
-      onChange={setFilter}
-      onReset={resetFilters}
-      isFiltered={isFiltered}
-    />
-  );
-
   const renderResults = () => {
-    if (isPending) return <LoadingState count={4} label="Loading academies…" />;
+    if (isPending) return <LoadingState count={6} label="Loading academies…" />;
     if (isError) return <ErrorState onRetry={() => void refetch()} />;
     if (data.data.length === 0) {
       return (
@@ -77,11 +66,14 @@ export function AcademiesPage() {
         className="space-y-8 transition-opacity aria-busy:opacity-60"
         aria-busy={isPlaceholderData}
       >
-        <div className="grid gap-4 sm:grid-cols-2">
+        {/* 1 column on phones, 2 on tablets, 3 on desktop; 12 per page fills every layout */}
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {data.data.map((academy) => (
-            <AcademyCard key={academy._id} academy={academy} />
+            <li key={academy._id}>
+              <AcademyCard academy={academy} />
+            </li>
           ))}
-        </div>
+        </ul>
         <DataPagination
           pagination={data.pagination}
           page={page}
@@ -93,42 +85,33 @@ export function AcademiesPage() {
   };
 
   return (
-    <Container className="space-y-8 py-8">
+    <Container className="space-y-6 py-6">
       <PageHeader
         title="Academies"
         description="Search and compare academies by career, cost, rating and features."
         actions={hasRole(user, ACADEMY_MANAGER_ROLES) && <AddAcademyButton />}
       />
 
-      <div className="grid gap-8 lg:grid-cols-[15rem_1fr]">
-        <aside aria-label="Filters" className="hidden lg:block">
-          {renderFilters("sidebar")}
-        </aside>
+      {/* One toolbar row on desktop; wraps on narrower screens (search gets its own line) */}
+      <search className="flex flex-wrap items-center gap-2">
+        <AcademySearch value={filters.search} onSearch={(value) => setFilter("search", value)} />
+        <AcademyFilters
+          values={filters}
+          onChange={setFilter}
+          onReset={resetFilters}
+          isFiltered={isFiltered}
+        />
+        <FilterSelect
+          label="Sort by"
+          unsetLabel="Newest first"
+          value={filters.sort}
+          options={SORT_OPTIONS}
+          onChange={(value) => setFilter("sort", value)}
+          className="ml-auto"
+        />
+      </search>
 
-        <section aria-label="Results" className="min-w-0 space-y-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-            <AcademySearch
-              value={filters.search}
-              onSearch={(value) => setFilter("search", value)}
-            />
-            <div className="flex items-end gap-3">
-              <MobileFiltersButton count={panelFilterCount}>
-                {renderFilters("sheet")}
-              </MobileFiltersButton>
-              <FilterSelect
-                id="academy-sort"
-                label="Sort by"
-                unsetLabel="Newest"
-                value={filters.sort}
-                options={SORT_OPTIONS}
-                onChange={(value) => setFilter("sort", value)}
-                className="flex-1 sm:w-48"
-              />
-            </div>
-          </div>
-          {renderResults()}
-        </section>
-      </div>
+      {renderResults()}
     </Container>
   );
 }

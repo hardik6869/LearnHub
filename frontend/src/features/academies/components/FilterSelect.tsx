@@ -1,12 +1,4 @@
-import {
-  Field,
-  FieldLabel,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
 import { cn } from "@/lib";
 import type { SelectOption } from "@/types";
 
@@ -14,7 +6,7 @@ import type { SelectOption } from "@/types";
 const UNSET = "__unset";
 
 interface FilterSelectProps {
-  id: string;
+  /** Accessible name; not shown, because the selected value ("All careers") says enough */
   label: string;
   /** Label of the "not set" option, e.g. "All careers" or "Newest" */
   unsetLabel: string;
@@ -24,9 +16,8 @@ interface FilterSelectProps {
   className?: string;
 }
 
-// A labelled select for list filters; "" means "not set"
+// A compact select for the filter bar; "" means "not set"
 export function FilterSelect({
-  id,
   label,
   unsetLabel,
   value,
@@ -35,21 +26,18 @@ export function FilterSelect({
   className,
 }: FilterSelectProps) {
   return (
-    <Field className={cn("gap-1.5", className)}>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
-      <Select value={value || UNSET} onValueChange={(next) => onChange(next === UNSET ? "" : next)}>
-        <SelectTrigger id={id} className="w-full">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value={UNSET}>{unsetLabel}</SelectItem>
-          {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </Field>
+    <Select value={value || UNSET} onValueChange={(next) => onChange(next === UNSET ? "" : next)}>
+      <SelectTrigger aria-label={label} className={cn("w-auto min-w-36", className)}>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value={UNSET}>{unsetLabel}</SelectItem>
+        {options.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }
