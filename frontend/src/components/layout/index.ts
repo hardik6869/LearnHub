@@ -6,7 +6,3 @@ export * from "./Logo";
 export * from "./MainNav";
 export * from "./MobileNav";
 export * from "./RootLayout";
-export * from "./ThemeProvider";
-export * from "./ThemeToggle";
-export * from "./themeContext";
-export * from "./useTheme";

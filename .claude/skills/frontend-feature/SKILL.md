@@ -192,6 +192,7 @@ export type * from "./types";
 
 - `npm run check` passes (run `/check`).
 - Run the app (`npm run dev:api` + `npm run dev:web`) and exercise the flow, including loading,
-  empty, error and unauthorised cases, at 375 / 768 / 1280 px and in dark mode.
+  empty, error and unauthorised cases, at 375 / 768 / 1280 px and 200% zoom, keyboard only, and
+  against the WCAG 2.2 AA checklist in `frontend/CLAUDE.md`.
 - Ask the `frontend-reviewer` agent to review the diff; fix what it finds.
 - Commit with a `feat(web): …` message.

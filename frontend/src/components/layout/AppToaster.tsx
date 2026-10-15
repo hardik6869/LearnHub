@@ -1,9 +1,8 @@
 import { Toaster } from "@/components/ui";
-import { useTheme } from "./useTheme";
 
-// The generated ui/sonner.tsx reads its theme from next-themes, which this app doesn't use;
-// passing `theme` here overrides it so toasts follow the selected theme
+// The app is light-only. theme="light" overrides the generated ui/sonner.tsx, which would
+// otherwise follow the OS dark mode. No `richColors`: toasts use the app's popover tokens
+// (WCAG AA contrast) and their icons, so status is never conveyed by colour alone.
 export function AppToaster() {
-  const { resolvedTheme } = useTheme();
-  return <Toaster theme={resolvedTheme} position="top-right" richColors closeButton />;
+  return <Toaster theme="light" position="top-right" closeButton />;
 }

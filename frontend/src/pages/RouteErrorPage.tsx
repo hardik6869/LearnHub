@@ -19,6 +19,7 @@ export function RouteErrorPage() {
   return (
     <Container className="py-16">
       <ErrorState
+        headingLevel="h1"
         message="An unexpected error occurred. Reload the page to try again."
         onRetry={() => {
           window.location.reload();
