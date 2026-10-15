@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui";
 import { ROUTES } from "@/constants";
 import { canManage, useCurrentUser } from "@/features/auth";
 import { CourseList } from "@/features/courses";
+import { ReviewList } from "@/features/reviews";
 import { useDocumentTitle } from "@/hooks";
 import { AcademyActions } from "../components/AcademyActions";
 import { AcademyInfo } from "../components/AcademyInfo";
@@ -64,6 +65,7 @@ export function AcademyDetailPage() {
       </section>
 
       <CourseList academy={academy} />
+      <ReviewList academy={academy} />
     </Container>
   );
 }
