@@ -1,0 +1,6 @@
+// Typed access to Vite env vars (declared in src/vite-env.d.ts, defaults in .env.example)
+export const env = {
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL ?? "/api/v1",
+  appName: import.meta.env.VITE_APP_NAME ?? "LearnHub",
+  isDev: import.meta.env.DEV,
+} as const;
