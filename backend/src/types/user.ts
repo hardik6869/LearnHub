@@ -1,8 +1,11 @@
 import type { HydratedDocument, Model } from "mongoose";
-import type { ASSIGNABLE_ROLES } from "../config/enums";
+import type { ASSIGNABLE_ROLES, USER_ROLES } from "../config/enums";
 
-// A role the schema stores ("user" | "publisher"), or "admin", which `authorize` checks for
-export type UserRole = (typeof ASSIGNABLE_ROLES)[number] | "admin";
+// Any stored role ("user" | "publisher" | "admin")
+export type UserRole = (typeof USER_ROLES)[number];
+
+// A role a request may set ("user" | "publisher")
+export type AssignableRole = (typeof ASSIGNABLE_ROLES)[number];
 
 export interface IUser {
   name: string;

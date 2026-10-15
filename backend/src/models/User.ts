@@ -2,7 +2,7 @@ import crypto from "crypto";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt, { SignOptions } from "jsonwebtoken";
-import { ASSIGNABLE_ROLES } from "../config/enums";
+import { USER_ROLES } from "../config/enums";
 import type { IUser, IUserMethods, UserModel } from "../types";
 
 const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
@@ -23,7 +23,8 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
     },
     role: {
       type: String,
-      enum: ASSIGNABLE_ROLES,
+      // All roles are valid stored values; requests are limited to ASSIGNABLE_ROLES in the controllers
+      enum: USER_ROLES,
       default: "user",
     },
     password: {

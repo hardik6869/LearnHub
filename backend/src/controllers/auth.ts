@@ -5,6 +5,7 @@ import asyncHandler from "../middleware/async";
 import { getAuthUser } from "../middleware/auth";
 import User from "../models/User";
 import sendEmail from "../utils/sendEmail";
+import { INVALID_ROLE_MESSAGE, isAssignableRole } from "../config/enums";
 import type {
   ForgotPasswordBody,
   LoginBody,
@@ -16,11 +17,19 @@ import type {
   UserDocument,
 } from "../types";
 
+// Sent for both outcomes of forgot password (see forgotPassword)
+const FORGOT_PASSWORD_MESSAGE = "If an account exists for that email, a reset link has been sent";
+
 // @desc   Register user
 // @route  POST /api/v1/auth/register
 // @access Public
-export const register = asyncHandler<RegisterBody>(async (req, res) => {
+export const register = asyncHandler<RegisterBody>(async (req, res, next) => {
   const { name, email, password, role } = req.body;
+
+  // The schema accepts "admin" (for stored admins), so requests are restricted here
+  if (role !== undefined && !isAssignableRole(role)) {
+    return next(new ErrorResponse(INVALID_ROLE_MESSAGE, 400));
+  }
 
   // Create Role
   const user = await User.create({
@@ -149,8 +158,11 @@ const sendTokenResponse = async (
 export const forgotPassword = asyncHandler<ForgotPasswordBody>(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
+  // Same answer whether or not the account exists, so the endpoint can't be used to find out
+  // which emails are registered (account enumeration)
   if (!user) {
-    return next(new ErrorResponse("There is no user with that email", 404));
+    res.status(200).json({ success: true, data: FORGOT_PASSWORD_MESSAGE });
+    return;
   }
 
   // Get Reset Token
@@ -171,7 +183,7 @@ export const forgotPassword = asyncHandler<ForgotPasswordBody>(async (req, res, 
       message,
     });
 
-    res.status(200).json({ success: true, data: "Email Sent" });
+    res.status(200).json({ success: true, data: FORGOT_PASSWORD_MESSAGE });
   } catch (err) {
     console.log(err);
     user.resetPasswordToken = undefined;

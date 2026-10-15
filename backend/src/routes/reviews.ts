@@ -17,7 +17,14 @@ const router = express.Router({ mergeParams: true });
 
 router
   .route("/")
-  .get(advancedResult(Review, { path: "academy", select: "name description" }), getReviews)
+  .get(
+    advancedResult(Review, [
+      { path: "academy", select: "name description" },
+      // Author name only, never other user fields
+      { path: "user", select: "name" },
+    ]),
+    getReviews,
+  )
   .post(protect, authorize("user", "admin"), addReview);
 
 router

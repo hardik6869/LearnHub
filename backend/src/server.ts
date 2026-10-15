@@ -58,7 +58,16 @@ app.use(fileUpload());
 app.use((req, res, next) => {
   if (req.body) mongoSanitize.sanitize(req.body as Record<string, unknown>);
   mongoSanitize.sanitize(req.params);
-  mongoSanitize.sanitize(req.query);
+  // Express 5: req.query is a getter that re-parses the URL on every access, so sanitising it in
+  // place has no effect (operators like ?name[$regex]= reached MongoDB). Pin a sanitised copy so
+  // every later reader (hpp, advancedResult) sees it.
+  const query = mongoSanitize.sanitize({ ...req.query });
+  Object.defineProperty(req, "query", {
+    value: query,
+    writable: true,
+    configurable: true,
+    enumerable: true,
+  });
   next();
 });
 

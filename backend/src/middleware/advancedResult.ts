@@ -2,11 +2,24 @@ import type { NextFunction, Request, Response } from "express";
 import type { Model, PopulateOptions, QueryFilter } from "mongoose";
 import type { Pagination } from "../types";
 
+// Fields stored with `select: false`. Clients may neither select them (`?select=+password`) nor
+// filter on them (`?password[gt]=…` would let a caller narrow down a hash character by character).
+const HIDDEN_FIELDS = new Set(["password", "resetPasswordToken", "resetPasswordExpire"]);
+
+// "+field" force-includes select:false fields, so it is never allowed from a client
+const isAllowedSelectField = (field: string): boolean => {
+  const name = field.replace(/^-/, "");
+  return field !== "" && !field.startsWith("+") && !HIDDEN_FIELDS.has(name);
+};
+
 const advancedResults =
-  <T>(model: Model<T>, populate?: string | PopulateOptions) =>
+  <T>(model: Model<T>, populate?: string | PopulateOptions | PopulateOptions[]) =>
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    // Copy req.query, excluding the select/sort/page/limit fields
-    const { select, sort, page: pageParam, limit: limitParam, ...reqQuery } = req.query;
+    // Copy req.query, excluding the select/sort/page/limit fields and any hidden field
+    const { select, sort, page: pageParam, limit: limitParam, ...queryFields } = req.query;
+    const reqQuery = Object.fromEntries(
+      Object.entries(queryFields).filter(([key]) => !HIDDEN_FIELDS.has(key)),
+    );
 
     // Create query string
     let queryStr = JSON.stringify(reqQuery);
@@ -27,8 +40,11 @@ const advancedResults =
 
     // Select Fields
     if (typeof select === "string") {
-      const fields = select.split(",").join(" ");
-      query = query.select(fields);
+      const fields = select
+        .split(",")
+        .map((field) => field.trim())
+        .filter(isAllowedSelectField);
+      if (fields.length > 0) query = query.select(fields.join(" "));
     }
 
     if (typeof sort === "string") {
@@ -48,7 +64,9 @@ const advancedResults =
 
     query = query.skip(startIndex).limit(limit);
 
-    const results: unknown[] = populate ? await query.populate([populate]) : await query;
+    const populateList = Array.isArray(populate) ? populate : populate ? [populate] : [];
+    const results: unknown[] =
+      populateList.length > 0 ? await query.populate(populateList) : await query;
 
     const pagination: Pagination = {};
 

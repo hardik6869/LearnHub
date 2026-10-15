@@ -3,6 +3,8 @@ import type { UploadedFile } from "express-fileupload";
 import Academy from "../models/Academy";
 import ErrorResponse from "../utils/errorResponse";
 import uploadImage from "../utils/uploadImage";
+import pick from "../utils/pick";
+import { ACADEMY_FIELDS } from "../config/enums";
 import asyncHandler from "../middleware/async";
 import { getAuthUser } from "../middleware/auth";
 import type { AcademyBody, IdParams } from "../types";
@@ -33,9 +35,6 @@ export const getAcademy = asyncHandler<unknown, IdParams>(async (req, res, next)
 export const createAcademy = asyncHandler<AcademyBody>(async (req, res, next) => {
   const user = getAuthUser(req);
 
-  // Add user to req.body
-  req.body.user = user.id;
-
   // Check for published academy
   const publishedAcademy = await Academy.findOne({ user: user.id });
 
@@ -46,7 +45,8 @@ export const createAcademy = asyncHandler<AcademyBody>(async (req, res, next) =>
     );
   }
 
-  const academy = await Academy.create(req.body);
+  // Only client-settable fields; the owner is always the signed-in user
+  const academy = await Academy.create({ ...pick(req.body, ACADEMY_FIELDS), user: user.id });
   res.status(201).json({ success: true, data: academy });
 });
 
@@ -68,7 +68,8 @@ export const updateAcademy = asyncHandler<AcademyBody, IdParams>(async (req, res
     );
   }
 
-  academy = await Academy.findOneAndUpdate({ _id: req.params.id }, req.body, {
+  // Only client-settable fields: the owner (`user`) and computed fields can't be changed here
+  academy = await Academy.findOneAndUpdate({ _id: req.params.id }, pick(req.body, ACADEMY_FIELDS), {
     new: true,
     runValidators: true,
   });

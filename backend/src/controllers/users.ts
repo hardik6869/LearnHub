@@ -1,5 +1,7 @@
 import asyncHandler from "../middleware/async";
 import User from "../models/User";
+import ErrorResponse from "../utils/errorResponse";
+import { INVALID_ROLE_MESSAGE, isAssignableRole } from "../config/enums";
 import type { CreateUserBody, IdParams, UpdateUserBody } from "../types";
 
 // @desc   Get all users
@@ -21,8 +23,12 @@ export const getUser = asyncHandler<unknown, IdParams>(async (req, res) => {
 // @desc   Create user
 // @route  POST /api/v1/auth/users
 // @access Private/Admin
-export const createUser = asyncHandler<CreateUserBody>(async (req, res) => {
+export const createUser = asyncHandler<CreateUserBody>(async (req, res, next) => {
   const { name, email, role, password } = req.body;
+  // Admins are assigned in the database only, never through the API
+  if (role !== undefined && !isAssignableRole(role)) {
+    return next(new ErrorResponse(INVALID_ROLE_MESSAGE, 400));
+  }
   const user = await User.create({ name, email, role, password });
 
   res.status(201).json({ success: true, data: user });
@@ -31,10 +37,13 @@ export const createUser = asyncHandler<CreateUserBody>(async (req, res) => {
 // @desc   Update user
 // @route  PUT /api/v1/auth/users
 // @access Private/Admin
-export const updateUser = asyncHandler<UpdateUserBody, IdParams>(async (req, res) => {
+export const updateUser = asyncHandler<UpdateUserBody, IdParams>(async (req, res, next) => {
   // Whitelist fields: findByIdAndUpdate skips the pre-save hook, so a password sent here would be
   // stored unhashed
   const { name, email, role } = req.body;
+  if (role !== undefined && !isAssignableRole(role)) {
+    return next(new ErrorResponse(INVALID_ROLE_MESSAGE, 400));
+  }
   const user = await User.findByIdAndUpdate(
     req.params.id,
     { name, email, role },

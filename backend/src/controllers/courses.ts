@@ -1,4 +1,6 @@
 import ErrorResponse from "../utils/errorResponse";
+import pick from "../utils/pick";
+import { COURSE_FIELDS } from "../config/enums";
 import asyncHandler from "../middleware/async";
 import { getAuthUser } from "../middleware/auth";
 import Course from "../models/Course";
@@ -34,8 +36,6 @@ export const getCourse = asyncHandler<unknown, IdParams>(async (req, res, next) 
 // @access Private
 export const addCourse = asyncHandler<CourseBody, AcademyParams>(async (req, res, next) => {
   const user = getAuthUser(req);
-  req.body.academy = req.params.academyId;
-  req.body.user = user.id;
 
   const academy = await Academy.findById(req.params.academyId);
 
@@ -55,7 +55,12 @@ export const addCourse = asyncHandler<CourseBody, AcademyParams>(async (req, res
     );
   }
 
-  const course = await Course.create(req.body);
+  // Only client-settable fields; academy and owner come from the route and the signed-in user
+  const course = await Course.create({
+    ...pick(req.body, COURSE_FIELDS),
+    academy: academy._id,
+    user: user.id,
+  });
   res.status(200).json({ success: true, data: course });
 });
 
@@ -80,7 +85,8 @@ export const updateCourse = asyncHandler<CourseBody, IdParams>(async (req, res, 
     );
   }
 
-  course = await Course.findByIdAndUpdate(req.params.id, req.body, {
+  // Only client-settable fields: a course can't be moved to another academy or owner
+  course = await Course.findByIdAndUpdate(req.params.id, pick(req.body, COURSE_FIELDS), {
     new: true,
     runValidators: true,
   });
