@@ -111,9 +111,12 @@ AcademySchema.pre("save", function () {
   this.slug = slugify(this.name, { lower: true });
 });
 
-// Cascade delete courses when an academy is deleted
+// Cascade delete courses and reviews when an academy is deleted
 AcademySchema.pre("deleteOne", { document: true, query: false }, async function () {
-  await this.model("Course").deleteMany({ academy: this._id });
+  await Promise.all([
+    this.model("Course").deleteMany({ academy: this._id }),
+    this.model("Review").deleteMany({ academy: this._id }),
+  ]);
 });
 
 //Reverse Popuulate with Virtuals
