@@ -28,6 +28,10 @@ export const protect = asyncHandler(async (req, res, next) => {
     const id =
       typeof decoded === "object" && typeof decoded.id === "string" ? decoded.id : undefined;
     req.user = await User.findById(id);
+    // Valid token, but the user no longer exists (deleted): treat as signed out, not a 500
+    if (!req.user) {
+      return next(new ErrorResponse("Not authorized to access this route", 401));
+    }
     next();
   } catch {
     return next(new ErrorResponse("Not authorized to access this route", 401));

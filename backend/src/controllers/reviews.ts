@@ -1,4 +1,6 @@
 import ErrorResponse from "../utils/errorResponse";
+import pick from "../utils/pick";
+import { REVIEW_FIELDS } from "../config/enums";
 import asyncHandler from "../middleware/async";
 import { getAuthUser } from "../middleware/auth";
 import Review from "../models/Review";
@@ -18,10 +20,11 @@ export const getReviews = asyncHandler(async (req, res) => {
 // @route  GET /api/v1/reviews/:id
 // @access Public
 export const getReview = asyncHandler<unknown, IdParams>(async (req, res, next) => {
-  const review = await Review.findById(req.params.id).populate({
-    path: "academy",
-    select: "name description",
-  });
+  const review = await Review.findById(req.params.id).populate([
+    { path: "academy", select: "name description" },
+    // Author name only, never other user fields
+    { path: "user", select: "name" },
+  ]);
 
   if (!review) {
     return next(new ErrorResponse(`No review found with the id of ${req.params.id}`, 404));
@@ -35,8 +38,6 @@ export const getReview = asyncHandler<unknown, IdParams>(async (req, res, next) 
 // @access Private
 export const addReview = asyncHandler<ReviewBody, AcademyParams>(async (req, res, next) => {
   const user = getAuthUser(req);
-  req.body.academy = req.params.academyId;
-  req.body.user = user.id;
 
   const academy = await Academy.findById(req.params.academyId);
 
@@ -46,7 +47,12 @@ export const addReview = asyncHandler<ReviewBody, AcademyParams>(async (req, res
     );
   }
 
-  const review = await Review.create(req.body);
+  // Only client-settable fields; academy and author come from the route and the signed-in user
+  const review = await Review.create({
+    ...pick(req.body, REVIEW_FIELDS),
+    academy: academy._id,
+    user: user.id,
+  });
 
   res.status(200).json({ success: true, data: review });
 });
@@ -67,7 +73,8 @@ export const updateReview = asyncHandler<ReviewBody, IdParams>(async (req, res, 
     return next(new ErrorResponse(`Not authorize to update review`, 401));
   }
 
-  review = await Review.findByIdAndUpdate(req.params.id, req.body, {
+  // Only client-settable fields: a review can't be moved to another academy or author
+  review = await Review.findByIdAndUpdate(req.params.id, pick(req.body, REVIEW_FIELDS), {
     new: true,
     runValidators: true,
   });

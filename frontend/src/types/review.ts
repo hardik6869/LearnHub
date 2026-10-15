@@ -10,7 +10,13 @@ export interface Review {
   createdAt: IsoDateString;
   /** An id, or the populated academy on list/detail endpoints */
   academy: Id | AcademySummary;
-  user: Id;
+  /** An id, or the author's name on list/detail endpoints (only `name` is populated) */
+  user: Id | ReviewAuthor;
+}
+
+export interface ReviewAuthor {
+  _id: Id;
+  name: string;
 }
 
 export type ReviewPayload = Pick<Review, "title" | "text" | "rating">;
