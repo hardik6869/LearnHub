@@ -32,7 +32,7 @@ components and the colour tokens; no custom colours, gradients or heavy decorati
 | `enums/`             | `CAREERS`, `MINIMUM_SKILLS`, `USER_ROLES`, `ASSIGNABLE_ROLES` + labels/options                                                    |
 | `types/`             | API JSON shapes (`Academy`, `Course`, `Review`, `User`), envelopes, payloads, `ListParams`                                        |
 | `lib/`               | `cn`, `toQueryString`, `getPhotoUrl`, `formatCurrency/Date/Rating`                                                                |
-| `hooks/`             | shared hooks: `useDebounce`, `useMediaQuery`, `useDocumentTitle`                                                                  |
+| `hooks/`             | shared hooks: `useDebounce`, `useDocumentTitle`                                                                                   |
 | `components/ui/`     | shadcn-generated components — kebab-case, **never hand-edited**                                                                   |
 | `components/common/` | reusable app components: `Container`, `PageHeader`, `LoadingState`, `EmptyState`, `ErrorState`, `ConfirmDialog`, `DataPagination` |
 | `components/layout/` | `RootLayout`, `Header`, `MobileNav`, `MainNav`, `Footer`, `Logo`, `AppToaster`, `AuthActions`                                     |
