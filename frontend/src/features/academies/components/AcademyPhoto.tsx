@@ -4,11 +4,16 @@ import type { Academy } from "@/types";
 
 interface AcademyPhotoProps {
   academy: Pick<Academy, "name" | "photo">;
+  /**
+   * "cover" fills the 16:9 box and crops the edges, so every card in a grid has the same size.
+   * "contain" shows the whole image at its own proportions (detail page, upload preview).
+   */
+  fit?: "cover" | "contain";
   className?: string;
 }
 
 // The academy's photo, or a neutral placeholder when it has none
-export function AcademyPhoto({ academy, className }: AcademyPhotoProps) {
+export function AcademyPhoto({ academy, fit = "cover", className }: AcademyPhotoProps) {
   const url = getPhotoUrl(academy.photo);
 
   return (
@@ -19,7 +24,7 @@ export function AcademyPhoto({ academy, className }: AcademyPhotoProps) {
           alt={academy.name}
           loading="lazy"
           decoding="async"
-          className="size-full object-cover"
+          className={cn("size-full", fit === "cover" ? "object-cover" : "object-contain")}
         />
       ) : (
         <div className="flex size-full items-center justify-center text-muted-foreground">

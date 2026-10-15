@@ -38,7 +38,7 @@ export function AcademyPhotoUpload({ academy }: { academy: Academy }) {
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-[12rem_1fr] sm:items-start">
-      <AcademyPhoto academy={academy} />
+      <AcademyPhoto academy={academy} fit="contain" />
       <div className="space-y-4">
         <Field data-invalid={Boolean(error)}>
           <FieldLabel htmlFor="academy-photo">Photo</FieldLabel>
@@ -49,7 +49,10 @@ export function AcademyPhotoUpload({ academy }: { academy: Academy }) {
             onChange={handleChange}
             aria-invalid={Boolean(error)}
           />
-          <FieldDescription>An image up to {MAX_PHOTO_LABEL}.</FieldDescription>
+          <FieldDescription>
+            A landscape photo works best (16:9, at least 1200 × 675 px), up to {MAX_PHOTO_LABEL}.
+            Lists crop it to 16:9.
+          </FieldDescription>
           {error && <FieldError>{error}</FieldError>}
         </Field>
         <SubmitButton isPending={upload.isPending} disabled={!file || Boolean(error)}>

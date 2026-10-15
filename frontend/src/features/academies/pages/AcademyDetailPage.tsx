@@ -41,7 +41,7 @@ export function AcademyDetailPage() {
 
       <div className="grid gap-8 lg:grid-cols-[2fr_1fr]">
         <div className="space-y-6">
-          <AcademyPhoto academy={academy} />
+          <AcademyPhoto academy={academy} fit="contain" className="max-h-96 w-full" />
           <section className="space-y-3">
             <h2 className="text-lg font-semibold">About</h2>
             <p className="leading-relaxed whitespace-pre-line">{academy.description}</p>
