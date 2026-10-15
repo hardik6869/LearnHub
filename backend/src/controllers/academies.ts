@@ -96,7 +96,7 @@ export const deleteAcademy = asyncHandler<unknown, IdParams>(async (req, res, ne
 
   await academy.deleteOne();
 
-  res.status(200).json({ success: true, message: `Delete Academy ${req.params.id}` });
+  res.status(200).json({ success: true, data: {} });
 });
 
 // @desc   upload photo for academy
@@ -113,7 +113,7 @@ export const academyPhotoUpload = asyncHandler<unknown, IdParams>(async (req, re
   // Make sure user is academy owner
   if (academy.user.toString() !== user.id && user.role !== "admin") {
     return next(
-      new ErrorResponse(`User ${req.params.id} is not authorized to update this academy`, 404),
+      new ErrorResponse(`User ${req.params.id} is not authorized to update this academy`, 401),
     );
   }
 

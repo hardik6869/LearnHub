@@ -193,10 +193,11 @@ export const resetPassword = asyncHandler<ResetPasswordBody, ResetPasswordParams
       .update(req.params.resettoken)
       .digest("hex");
 
+    // The reset fields are select: false; select them so clearing them below is persisted
     const user = await User.findOne({
       resetPasswordToken,
       resetPasswordExpire: { $gt: Date.now() },
-    });
+    }).select("+resetPasswordToken +resetPasswordExpire");
 
     if (!user) {
       return next(new ErrorResponse("Invalid Token", 400));

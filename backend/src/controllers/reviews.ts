@@ -9,13 +9,9 @@ import type { AcademyParams, IdParams, ReviewBody } from "../types";
 // @route  GET /api/v1/reviews
 // @route  GET /api/v1/academies/:academyId/reviews
 // @access Public
-export const getReviews = asyncHandler<unknown, AcademyParams>(async (req, res) => {
-  if (req.params.academyId) {
-    const reviews = await Review.find({ academy: req.params.academyId });
-    res.status(200).json({ success: true, count: reviews.length, data: reviews });
-  } else {
-    res.status(200).json(res.advancedResults);
-  }
+// Nested requests are filtered to the academy by advancedResult, so both share pagination
+export const getReviews = asyncHandler(async (req, res) => {
+  res.status(200).json(res.advancedResults);
 });
 
 // @desc   Get Single Review

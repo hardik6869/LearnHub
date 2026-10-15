@@ -23,5 +23,8 @@ export interface IUserMethods {
 export type UserModel = Model<IUser, object, IUserMethods>;
 export type UserDocument = HydratedDocument<IUser, IUserMethods>;
 
-// Request body for the admin user routes
-export type UserBody = Partial<IUser>;
+// Request bodies for the admin user routes: only these fields are accepted, never reset tokens.
+// The password can only be set on create (hashed by the pre-save hook); users change it via
+// /auth/updatepassword or the reset flow
+export type CreateUserBody = Partial<Pick<IUser, "name" | "email" | "role" | "password">>;
+export type UpdateUserBody = Partial<Pick<IUser, "name" | "email" | "role">>;

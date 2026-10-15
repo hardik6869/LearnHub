@@ -14,8 +14,13 @@ const advancedResults =
     // Create operators ($gt, $gte, etc)
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
 
-    // The client-supplied filter, with operators rewritten above
-    const filter = JSON.parse(queryStr) as QueryFilter<T>;
+    // The client-supplied filter, with operators rewritten above. Nested routes
+    // (/academies/:academyId/courses|reviews) are always limited to that academy.
+    const { academyId } = req.params;
+    const filter = {
+      ...(JSON.parse(queryStr) as QueryFilter<T>),
+      ...(academyId ? { academy: academyId } : {}),
+    } as QueryFilter<T>;
 
     // Finding resource
     let query = model.find(filter);
@@ -38,7 +43,8 @@ const advancedResults =
     const limit = parseInt(typeof limitParam === "string" ? limitParam : "", 10) || 25;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
-    const total = await model.countDocuments();
+    // Count only matching documents, so `next` is correct for filtered lists
+    const total = await model.countDocuments(filter);
 
     query = query.skip(startIndex).limit(limit);
 
