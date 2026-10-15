@@ -21,6 +21,8 @@ export const API_ROUTES = {
     courses: (academyId: Id) => `/academies/${academyId}/courses`,
     reviews: (academyId: Id) => `/academies/${academyId}/reviews`,
   },
+  // Courses and reviews are created through the nested academy routes above
+  // (POST academies.courses(academyId) / academies.reviews(academyId)), not these lists
   courses: {
     list: "/courses",
     detail: (id: Id) => `/courses/${id}`,

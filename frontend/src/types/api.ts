@@ -5,6 +5,15 @@ export interface ApiResponse<TData> {
   data: TData;
 }
 
+// DELETE endpoints respond with { success: true, data: {} }
+export type EmptyResponse = ApiResponse<Record<string, never>>;
+
+// Responses carrying a message instead of data, e.g. academy photo upload (message = photo)
+export interface MessageResponse {
+  success: true;
+  message: string;
+}
+
 export interface PageRef {
   page: number;
   limit: number;

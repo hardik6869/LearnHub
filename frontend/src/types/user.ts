@@ -1,4 +1,4 @@
-import type { UserRole } from "@/enums";
+import type { AssignableRole, UserRole } from "@/enums";
 import type { Id, IsoDateString } from "./common";
 
 export interface User {
@@ -9,10 +9,13 @@ export interface User {
   createdAt: IsoDateString;
 }
 
-// Admin create/update (/users); the password is only sent when creating
-export interface UserPayload {
+// Admin create (POST /users): the API stores only assignable roles, never "admin"
+export interface CreateUserPayload {
   name: string;
   email: string;
-  role: UserRole;
-  password?: string;
+  role: AssignableRole;
+  password: string;
 }
+
+// Admin update (PUT /users/:id): the API ignores passwords here; users change their own password
+export type UpdateUserPayload = Partial<Omit<CreateUserPayload, "password">>;
