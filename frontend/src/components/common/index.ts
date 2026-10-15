@@ -3,6 +3,7 @@ export * from "./Container";
 export * from "./DataPagination";
 export * from "./EmptyState";
 export * from "./ErrorState";
+export * from "./form";
 export * from "./LoadingState";
 export * from "./PageHeader";
 export * from "./PageLoading";

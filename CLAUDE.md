@@ -29,7 +29,8 @@ Run from the repo root:
 - Frontend `types/`, `enums/` and `constants/apiRoutes.ts` mirror the backend's models, enums and
   routes — when an API route, field or enum value changes, update both sides in the same change
   (the `api-contract-checker` agent verifies this).
-- Branch from an up-to-date `main`; one feature module per branch and PR.
+- Branch from an up-to-date `main`. Related work can share one branch and PR; make one commit per
+  working step (each passing `npm run check`).
 
 ## Backend conventions
 

@@ -23,21 +23,21 @@ components and the colour tokens; no custom colours, gradients or heavy decorati
 
 ## Folder map (`src/`)
 
-| Folder               | Holds                                                                                                                             |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `app/`               | `App`, `Providers` (React Query, toaster, devtools), `queryClient`, `router.tsx`                                                  |
-| `api/`               | `apiClient` (axios), `http` helpers, `ApiError`, `getErrorMessage`                                                                |
-| `config/`            | `env` (typed `import.meta.env`)                                                                                                   |
-| `constants/`         | `API_ROUTES`, `ROUTES` / `ROUTE_PATHS`, `queryKeys`, `MAIN_NAV`, app constants                                                    |
-| `enums/`             | `CAREERS`, `MINIMUM_SKILLS`, `USER_ROLES`, `ASSIGNABLE_ROLES` + labels/options                                                    |
-| `types/`             | API JSON shapes (`Academy`, `Course`, `Review`, `User`), envelopes, payloads, `ListParams`                                        |
-| `lib/`               | `cn`, `toQueryString`, `getPhotoUrl`, `formatCurrency/Date/Rating`                                                                |
-| `hooks/`             | shared hooks: `useDebounce`, `useDocumentTitle`                                                                                   |
-| `components/ui/`     | shadcn-generated components — kebab-case, **never hand-edited**                                                                   |
-| `components/common/` | reusable app components: `Container`, `PageHeader`, `LoadingState`, `EmptyState`, `ErrorState`, `ConfirmDialog`, `DataPagination` |
-| `components/layout/` | `RootLayout`, `Header`, `MobileNav`, `MainNav`, `Footer`, `Logo`, `AppToaster`, `AuthActions`                                     |
-| `features/<name>/`   | one module each: `api/ hooks/ components/ pages/ schemas/ types.ts index.ts` (see `features/README.md`)                           |
-| `pages/`             | app-level pages: `HomePage` (lazy), `NotFoundPage`, `RouteErrorPage`                                                              |
+| Folder               | Holds                                                                                                                                                    |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/`               | `App`, `Providers` (React Query, toaster, devtools), `queryClient`, `router.tsx`                                                                         |
+| `api/`               | `apiClient` (axios), `http` helpers, `ApiError`, `getErrorMessage`                                                                                       |
+| `config/`            | `env` (typed `import.meta.env`)                                                                                                                          |
+| `constants/`         | `API_ROUTES`, `ROUTES` / `ROUTE_PATHS`, `queryKeys`, `MAIN_NAV`, app constants                                                                           |
+| `enums/`             | `CAREERS`, `MINIMUM_SKILLS`, `USER_ROLES`, `ASSIGNABLE_ROLES` + labels/options                                                                           |
+| `types/`             | API JSON shapes (`Academy`, `Course`, `Review`, `User`), envelopes, payloads, `ListParams`                                                               |
+| `lib/`               | `cn`, `toQueryString`, `getPhotoUrl`, `formatCurrency/Date/Rating`                                                                                       |
+| `hooks/`             | shared hooks: `useDebounce`, `useDocumentTitle`                                                                                                          |
+| `components/ui/`     | shadcn-generated components — kebab-case, **never hand-edited**                                                                                          |
+| `components/common/` | reusable app components: `Container`, `PageHeader`, `LoadingState`, `EmptyState`, `ErrorState`, `ConfirmDialog`, `DataPagination`, form fields (`form/`) |
+| `components/layout/` | `RootLayout`, `Header`, `MobileNav`, `MainNav`, `Footer`, `Logo`, `AppToaster`, `AuthActions`                                                            |
+| `features/<name>/`   | one module each: `api/ hooks/ components/ pages/ schemas/ types.ts index.ts` (see `features/README.md`)                                                  |
+| `pages/`             | app-level pages: `HomePage` (lazy), `NotFoundPage`, `RouteErrorPage`                                                                                     |
 
 ## Naming
 
@@ -98,22 +98,17 @@ component → feature hook (useQuery/useMutation) → feature api fn → http.* 
 
 ## Forms
 
-react-hook-form + zod (`zodResolver`) + shadcn **`Field`** components (shadcn v4 has no `form`
-component):
+react-hook-form + zod (`zodResolver`). Use the field wrappers from `@/components/common`
+(`TextField`, `TextareaField`, `SelectField`, `CheckboxField`) — each renders the label,
+control, `required` marker and error, one line per field:
 
 ```tsx
-<Controller
-  name="email"
-  control={form.control}
-  render={({ field, fieldState }) => (
-    <Field data-invalid={fieldState.invalid}>
-      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-      <Input {...field} id={field.name} type="email" aria-invalid={fieldState.invalid} />
-      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-    </Field>
-  )}
-/>
+<TextField control={form.control} name="email" label="Email" type="email" required />
+<SelectField control={form.control} name="role" label="Role" options={ASSIGNABLE_ROLE_OPTIONS} />
 ```
+
+For a control without a wrapper, use `FormField` with a `render` function (it supplies the
+`Controller`, shadcn `Field`, label and `FieldError`); add a new wrapper once it is used twice.
 
 - Schemas in `features/<f>/schemas/`, named `<thing>Schema`, with `type X = z.infer<typeof …>`.
   Validation mirrors the backend model (required fields, lengths, rating 1–10, enums from
