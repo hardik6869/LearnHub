@@ -1,8 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { ReactNode } from "react";
-import { ThemeProvider } from "@/components/layout";
-import { Toaster } from "@/components/ui";
+import { AppToaster, ThemeProvider } from "@/components/layout";
 import { queryClient } from "./queryClient";
 
 // App-wide providers; the devtools render nothing in production builds
@@ -11,7 +10,7 @@ export function Providers({ children }: { children: ReactNode }) {
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         {children}
-        <Toaster position="top-right" richColors closeButton />
+        <AppToaster />
         <ReactQueryDevtools buttonPosition="bottom-left" />
       </QueryClientProvider>
     </ThemeProvider>

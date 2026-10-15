@@ -2,7 +2,12 @@
 
 React 19 + Vite 8 + strict TypeScript · Tailwind CSS v4 · shadcn/ui v4 (Radix base, Nova preset,
 neutral, light/dark) · react-router v8 (data router) · TanStack Query v5 · axios ·
-react-hook-form + zod v4 · sonner toasts · next-themes · lucide-react.
+react-hook-form + zod v4 · sonner toasts · lucide-react.
+
+Theme: own `ThemeProvider` / `useTheme` (`components/layout`), with the first paint set by the
+inline script in `index.html` (same `theme` localStorage key). Don't use `next-themes`'
+provider — it renders a `<script>` React 19 warns about; the package stays only because the
+generated `ui/sonner.tsx` imports it, and `AppToaster` passes the theme to the toaster.
 
 Goal for every screen: **simple, professional, responsive — not over-designed.** Use shadcn
 components and theme tokens; no custom colours, gradients or heavy decoration.
@@ -17,21 +22,21 @@ components and theme tokens; no custom colours, gradients or heavy decoration.
 
 ## Folder map (`src/`)
 
-| Folder               | Holds                                                                                                                             |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `app/`               | `App`, `Providers` (theme, React Query, toaster, devtools), `queryClient`, `router.tsx`                                           |
-| `api/`               | `apiClient` (axios), `http` helpers, `ApiError`, `getErrorMessage`                                                                |
-| `config/`            | `env` (typed `import.meta.env`)                                                                                                   |
-| `constants/`         | `API_ROUTES`, `ROUTES` / `ROUTE_PATHS`, `queryKeys`, `MAIN_NAV`, app constants                                                    |
-| `enums/`             | `CAREERS`, `MINIMUM_SKILLS`, `USER_ROLES`, `ASSIGNABLE_ROLES` + labels/options                                                    |
-| `types/`             | API JSON shapes (`Academy`, `Course`, `Review`, `User`), envelopes, payloads, `ListParams`                                        |
-| `lib/`               | `cn`, `toQueryString`, `getPhotoUrl`, `formatCurrency/Date/Rating`                                                                |
-| `hooks/`             | shared hooks: `useDebounce`, `useMediaQuery`, `useDocumentTitle`                                                                  |
-| `components/ui/`     | shadcn-generated components — kebab-case, **never hand-edited**                                                                   |
-| `components/common/` | reusable app components: `Container`, `PageHeader`, `LoadingState`, `EmptyState`, `ErrorState`, `ConfirmDialog`, `DataPagination` |
-| `components/layout/` | `RootLayout`, `Header`, `MobileNav`, `MainNav`, `Footer`, `Logo`, `ThemeToggle`, `AuthActions`                                    |
-| `features/<name>/`   | one module each: `api/ hooks/ components/ pages/ schemas/ types.ts index.ts` (see `features/README.md`)                           |
-| `pages/`             | app-level pages: `HomePage` (lazy), `NotFoundPage`, `RouteErrorPage`                                                              |
+| Folder               | Holds                                                                                                                                     |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/`               | `App`, `Providers` (theme, React Query, toaster, devtools), `queryClient`, `router.tsx`                                                   |
+| `api/`               | `apiClient` (axios), `http` helpers, `ApiError`, `getErrorMessage`                                                                        |
+| `config/`            | `env` (typed `import.meta.env`)                                                                                                           |
+| `constants/`         | `API_ROUTES`, `ROUTES` / `ROUTE_PATHS`, `queryKeys`, `MAIN_NAV`, app constants                                                            |
+| `enums/`             | `CAREERS`, `MINIMUM_SKILLS`, `USER_ROLES`, `ASSIGNABLE_ROLES` + labels/options                                                            |
+| `types/`             | API JSON shapes (`Academy`, `Course`, `Review`, `User`), envelopes, payloads, `ListParams`                                                |
+| `lib/`               | `cn`, `toQueryString`, `getPhotoUrl`, `formatCurrency/Date/Rating`                                                                        |
+| `hooks/`             | shared hooks: `useDebounce`, `useMediaQuery`, `useDocumentTitle`                                                                          |
+| `components/ui/`     | shadcn-generated components — kebab-case, **never hand-edited**                                                                           |
+| `components/common/` | reusable app components: `Container`, `PageHeader`, `LoadingState`, `EmptyState`, `ErrorState`, `ConfirmDialog`, `DataPagination`         |
+| `components/layout/` | `RootLayout`, `Header`, `MobileNav`, `MainNav`, `Footer`, `Logo`, `ThemeToggle`, `ThemeProvider`, `useTheme`, `AppToaster`, `AuthActions` |
+| `features/<name>/`   | one module each: `api/ hooks/ components/ pages/ schemas/ types.ts index.ts` (see `features/README.md`)                                   |
+| `pages/`             | app-level pages: `HomePage` (lazy), `NotFoundPage`, `RouteErrorPage`                                                                      |
 
 ## Naming
 
