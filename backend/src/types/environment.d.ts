@@ -3,6 +3,7 @@ declare global {
     interface ProcessEnv {
       NODE_ENV?: string;
       PORT?: string;
+      CLIENT_URL?: string;
       MONGO_URI?: string;
       FILE_UPLOAD_PATH?: string;
       MAX_FILE_UPLOAD?: string;

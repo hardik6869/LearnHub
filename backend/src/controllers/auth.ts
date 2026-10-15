@@ -76,6 +76,7 @@ export const logout = asyncHandler(async (req, res) => {
   res.cookie("token", "none", {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
+    sameSite: "lax",
   });
 
   res.status(200).json({ success: true, data: {} });
@@ -131,6 +132,8 @@ const sendTokenResponse = async (
   const options: CookieOptions = {
     expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRE) * 24 * 60 * 60 * 1000),
     httpOnly: true,
+    // Not sent on cross-site POST/PUT/DELETE, which guards cookie auth against CSRF
+    sameSite: "lax",
   };
 
   if (process.env.NODE_ENV === "production") {
@@ -155,10 +158,11 @@ export const forgotPassword = asyncHandler<ForgotPasswordBody>(async (req, res, 
 
   await user.save({ validateBeforeSave: false });
 
-  // Crete reset url
-  const resetUrl = `${req.protocol}://${String(req.get("host"))}/api/v1/auth/resetpassword/${resetToken}`;
-
-  const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+  // Create reset url: the frontend page when CLIENT_URL is set, otherwise the API endpoint
+  const clientUrl = process.env.CLIENT_URL;
+  const message = clientUrl
+    ? `You are receiving this email because you (or someone else) has requested the reset of a password. Please open this link to choose a new password: \n\n ${clientUrl}/reset-password/${resetToken}`
+    : `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${req.protocol}://${String(req.get("host"))}/api/v1/auth/resetpassword/${resetToken}`;
 
   try {
     await sendEmail({

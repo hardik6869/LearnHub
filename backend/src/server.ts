@@ -71,8 +71,8 @@ app.use(limiter);
 // Prevent Http Params Polution
 app.use(hpp());
 
-// Enable CORS
-app.use(cors());
+// Enable CORS for the frontend only, with cookies (no CLIENT_URL: no cross-origin access)
+app.use(cors({ origin: process.env.CLIENT_URL ?? false, credentials: true }));
 
 // Set Static Folder
 app.use(express.static(path.join(ROOT_DIR, "public")));
