@@ -2,10 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(npm run check)",
+      "Bash(npm run check -w backend)",
+      "Bash(npm run check -w frontend)",
       "Bash(npm run typecheck)",
       "Bash(npm run lint)",
       "Bash(npm run format)",
       "Bash(npm run format:check)",
+      "Bash(npm run build -w frontend)",
+      "Bash(npm run dev:web)",
+      "Bash(npx shadcn@latest add:*)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)"
