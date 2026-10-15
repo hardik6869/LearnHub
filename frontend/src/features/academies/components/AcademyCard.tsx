@@ -30,7 +30,7 @@ export const AcademyCard = memo(function AcademyCard({ academy }: { academy: Aca
           </h2>
           <p className="flex items-center gap-1 text-sm text-muted-foreground">
             <MapPin className="size-4 shrink-0" aria-hidden />
-            <span className="truncate">{academy.address}</span>
+            <span className="min-w-0 truncate">{academy.address}</span>
           </p>
         </div>
 

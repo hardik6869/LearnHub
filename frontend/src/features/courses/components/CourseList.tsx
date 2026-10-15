@@ -9,6 +9,7 @@ import {
 } from "@/components/common";
 import { Button } from "@/components/ui";
 import { canManage, useCurrentUser } from "@/features/auth";
+import { cn } from "@/lib";
 import type { Academy, Course } from "@/types";
 import { useAcademyCourses } from "../hooks/useAcademyCourses";
 import { useCreateCourse, useDeleteCourse, useUpdateCourse } from "../hooks/useCourseMutations";
@@ -22,6 +23,14 @@ import { CourseForm } from "./CourseForm";
 
 // "new" opens the add dialog; a course opens the edit dialog
 type Editing = Course | "new" | null;
+
+// As many columns as there are courses (up to 3), so a row never ends in empty space.
+// Full class names, so Tailwind can find them.
+const getGridColumns = (count: number): string => {
+  if (count === 1) return "";
+  if (count === 2) return "sm:grid-cols-2";
+  return "sm:grid-cols-2 lg:grid-cols-3";
+};
 
 // The courses section of the academy page: list, plus add/edit/delete for the owner or an admin.
 // One form dialog and one confirm dialog serve every course.
@@ -68,7 +77,7 @@ export function CourseList({ academy }: { academy: Academy }) {
       );
     }
     return (
-      <ul className="grid gap-4 md:grid-cols-2">
+      <ul className={cn("grid grid-cols-1 gap-4", getGridColumns(data.data.length))}>
         {data.data.map((course) => (
           <li key={course._id}>
             <CourseCard

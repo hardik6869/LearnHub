@@ -1,6 +1,14 @@
 import { CalendarDays, GraduationCap, Pencil, Trash2, Wallet } from "lucide-react";
 import { memo } from "react";
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui";
 import { MINIMUM_SKILL_LABELS } from "@/enums";
 import { formatCurrency } from "@/lib";
 import type { Course } from "@/types";
@@ -20,13 +28,14 @@ export const CourseCard = memo(function CourseCard({
   onDelete,
 }: CourseCardProps) {
   return (
-    <Card className="gap-3 py-4">
-      <CardHeader className="flex items-start justify-between gap-2 px-4">
-        <CardTitle className="text-base">
+    <Card className="h-full gap-3">
+      <CardHeader>
+        <CardTitle className="self-center">
           <h3>{course.title}</h3>
         </CardTitle>
+        {/* CardAction is the header's built-in top-right slot */}
         {canEdit && (
-          <div className="-my-1 flex shrink-0 gap-1">
+          <CardAction className="-my-1 flex gap-1">
             <Button
               variant="ghost"
               size="icon-sm"
@@ -43,10 +52,10 @@ export const CourseCard = memo(function CourseCard({
             >
               <Trash2 aria-hidden />
             </Button>
-          </div>
+          </CardAction>
         )}
       </CardHeader>
-      <CardContent className="space-y-3 px-4">
+      <CardContent className="flex flex-1 flex-col gap-3">
         <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
           <li className="flex items-center gap-1">
             <CalendarDays className="size-4 text-muted-foreground" aria-hidden />
@@ -62,7 +71,11 @@ export const CourseCard = memo(function CourseCard({
           </li>
         </ul>
         <p className="line-clamp-3 text-sm text-muted-foreground">{course.description}</p>
-        {course.scholarhipsAvailable && <Badge variant="secondary">Scholarships available</Badge>}
+        {course.scholarhipsAvailable && (
+          <Badge variant="secondary" className="mt-auto self-start">
+            Scholarships available
+          </Badge>
+        )}
       </CardContent>
     </Card>
   );

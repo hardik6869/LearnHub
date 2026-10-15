@@ -40,27 +40,30 @@ export function AcademyDetailPage() {
         actions={canManage(user, academy) && <AcademyActions academy={academy} />}
       />
 
-      <div className="grid gap-8 lg:grid-cols-[2fr_1fr]">
-        <div className="space-y-6">
-          <AcademyPhoto academy={academy} fit="contain" className="max-h-96 w-full" />
-          <section className="space-y-3">
-            <h2 className="text-lg font-semibold">About</h2>
-            <p className="leading-relaxed whitespace-pre-line">{academy.description}</p>
-            <ul className="flex flex-wrap gap-1.5" aria-label="Careers">
-              {academy.careers.map((career) => (
-                <li key={career}>
-                  <Badge variant="secondary">{career}</Badge>
-                </li>
-              ))}
-            </ul>
-          </section>
-          <CourseList academy={academy} />
-        </div>
-        {/* Sticky on desktop so the key facts stay visible while reading courses and reviews */}
-        <aside className="lg:sticky lg:top-24 lg:self-start">
-          <AcademyInfo academy={academy} />
-        </aside>
+      {/* Photo and key facts share one row of equal height on desktop; on phones the key
+          facts come first */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <AcademyPhoto
+          academy={academy}
+          fit="contain"
+          className="w-full lg:aspect-auto lg:h-full lg:min-h-72"
+        />
+        <AcademyInfo academy={academy} className="order-first h-full lg:order-none" />
       </div>
+
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">About</h2>
+        <p className="leading-relaxed whitespace-pre-line">{academy.description}</p>
+        <ul className="flex flex-wrap gap-1.5" aria-label="Careers">
+          {academy.careers.map((career) => (
+            <li key={career}>
+              <Badge variant="secondary">{career}</Badge>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <CourseList academy={academy} />
     </Container>
   );
 }

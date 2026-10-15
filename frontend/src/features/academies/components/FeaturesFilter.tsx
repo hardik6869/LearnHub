@@ -27,7 +27,7 @@ export function FeaturesFilter({ values, onChange }: FeaturesFilterProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="border-input font-normal">
+        <Button variant="outline" className="shrink-0 border-input font-normal">
           Features{selected > 0 && ` (${String(selected)})`}
           <ChevronDown className="text-muted-foreground" aria-hidden />
         </Button>

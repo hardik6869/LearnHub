@@ -24,10 +24,11 @@ interface AcademyFiltersProps {
   isFiltered: boolean;
 }
 
-// One compact row of filters; wraps onto a second line on narrow screens
+// The filter controls. `contents` makes them items of the parent's toolbar row, which decides
+// whether they scroll sideways (phones) or wrap (wider screens).
 export function AcademyFilters({ values, onChange, onReset, isFiltered }: AcademyFiltersProps) {
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="contents">
       <FilterSelect
         label="Career"
         unsetLabel="All careers"
@@ -51,7 +52,7 @@ export function AcademyFilters({ values, onChange, onReset, isFiltered }: Academ
       />
       <FeaturesFilter values={values} onChange={onChange} />
       {isFiltered && (
-        <Button variant="ghost" onClick={onReset}>
+        <Button variant="ghost" onClick={onReset} className="shrink-0">
           <X aria-hidden />
           Clear
         </Button>

@@ -27,7 +27,7 @@ export function FilterSelect({
 }: FilterSelectProps) {
   return (
     <Select value={value || UNSET} onValueChange={(next) => onChange(next === UNSET ? "" : next)}>
-      <SelectTrigger aria-label={label} className={cn("w-auto min-w-36", className)}>
+      <SelectTrigger aria-label={label} className={cn("w-auto min-w-36 shrink-0", className)}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

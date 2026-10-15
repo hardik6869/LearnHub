@@ -67,7 +67,7 @@ export function AcademiesPage() {
         aria-busy={isPlaceholderData}
       >
         {/* 1 column on phones, 2 on tablets, 3 on desktop; 12 per page fills every layout */}
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {data.data.map((academy) => (
             <li key={academy._id}>
               <AcademyCard academy={academy} />
@@ -92,23 +92,27 @@ export function AcademiesPage() {
         actions={hasRole(user, ACADEMY_MANAGER_ROLES) && <AddAcademyButton />}
       />
 
-      {/* One toolbar row on desktop; wraps on narrower screens (search gets its own line) */}
-      <search className="flex flex-wrap items-center gap-2">
+      {/* Desktop: search, filters and sort in one row (wrapping if needed).
+          Phones/tablets: search on top, then one row of filters you swipe sideways; it runs
+          edge to edge (-mx/px match Container's padding) so it's clear there's more to scroll. */}
+      <search className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center">
         <AcademySearch value={filters.search} onSearch={(value) => setFilter("search", value)} />
-        <AcademyFilters
-          values={filters}
-          onChange={setFilter}
-          onReset={resetFilters}
-          isFiltered={isFiltered}
-        />
-        <FilterSelect
-          label="Sort by"
-          unsetLabel="Newest first"
-          value={filters.sort}
-          options={SORT_OPTIONS}
-          onChange={(value) => setFilter("sort", value)}
-          className="ml-auto"
-        />
+        <div className="-mx-4 flex items-center gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 md:contents">
+          <AcademyFilters
+            values={filters}
+            onChange={setFilter}
+            onReset={resetFilters}
+            isFiltered={isFiltered}
+          />
+          <FilterSelect
+            label="Sort by"
+            unsetLabel="Newest first"
+            value={filters.sort}
+            options={SORT_OPTIONS}
+            onChange={(value) => setFilter("sort", value)}
+            className="md:ml-auto"
+          />
+        </div>
       </search>
 
       {renderResults()}

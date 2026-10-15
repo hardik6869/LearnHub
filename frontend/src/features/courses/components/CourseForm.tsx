@@ -31,7 +31,8 @@ export function CourseForm({ defaultValues, onSubmit, isPending, submitLabel }: 
       <FieldGroup>
         <TextField control={control} name="title" label="Title" required />
         <TextareaField control={control} name="description" label="Description" required />
-        <div className="grid gap-5 sm:grid-cols-3">
+        {/* Two columns at most: three are too narrow in the dialog and labels wrap unevenly */}
+        <div className="grid items-start gap-5 sm:grid-cols-2">
           <TextField
             control={control}
             name="weeks"
@@ -51,14 +52,14 @@ export function CourseForm({ defaultValues, onSubmit, isPending, submitLabel }: 
             step={1}
             required
           />
-          <SelectField
-            control={control}
-            name="minimumSkill"
-            label="Minimum skill"
-            options={MINIMUM_SKILL_OPTIONS}
-            required
-          />
         </div>
+        <SelectField
+          control={control}
+          name="minimumSkill"
+          label="Minimum skill"
+          options={MINIMUM_SKILL_OPTIONS}
+          required
+        />
         <CheckboxField
           control={control}
           name="scholarhipsAvailable"

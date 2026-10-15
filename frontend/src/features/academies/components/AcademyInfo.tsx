@@ -20,12 +20,17 @@ function InfoRow({ icon, children }: { icon: ReactNode; children: ReactNode }) {
   );
 }
 
-// Side panel of the academy page: rating, cost, contact details and features
-export function AcademyInfo({ academy }: { academy: Academy }) {
+interface AcademyInfoProps {
+  academy: Academy;
+  className?: string;
+}
+
+// "At a glance" panel of the academy page: rating, cost, contact details and features
+export function AcademyInfo({ academy, className }: AcademyInfoProps) {
   const iconClass = "size-4 shrink-0 text-muted-foreground";
 
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>
           <h2>At a glance</h2>
