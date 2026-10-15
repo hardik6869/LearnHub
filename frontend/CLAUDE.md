@@ -66,7 +66,7 @@ One component per file, **named exports only** (no default exports). Rename file
 
 ## Data flow (never call axios or `http` from a component)
 
-```
+```text
 component → feature hook (useQuery/useMutation) → feature api fn → http.* with API_ROUTES
 ```
 
