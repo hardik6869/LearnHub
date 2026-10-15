@@ -6,6 +6,7 @@ import { bold } from "colors";
 import fileUpload from "express-fileupload";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/db";
+import { assertRequiredEnv } from "./config/env";
 import { ROOT_DIR } from "./config/paths";
 import errorHandler from "./middleware/error";
 import helmet from "helmet";
@@ -24,6 +25,7 @@ import reviews from "./routes/reviews";
 
 // Load ENV File
 dotenv.config({ path: "./config/config.env" });
+assertRequiredEnv();
 
 void connectDB();
 

@@ -62,6 +62,9 @@ npm run seed:i
 npm run seed:d
 ```
 
+> **Development only.** The seed users share a known password (`123456`). Never run the seeder
+> against a production database, and `seed:d` deletes every academy, course, review and user.
+
 - Version: 1.0.0
 - License: MIT
 

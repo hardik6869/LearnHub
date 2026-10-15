@@ -3,6 +3,7 @@ import path from "path";
 import mongoose from "mongoose";
 import "colors";
 import dotenv from "dotenv";
+import { assertRequiredEnv } from "./config/env";
 import { ROOT_DIR } from "./config/paths";
 
 // load models
@@ -13,6 +14,7 @@ import Review from "./models/Review";
 import type { IAcademy, ICourse, IReview, IUser, Seed } from "./types";
 
 dotenv.config({ path: "./config/config.env" });
+assertRequiredEnv(["MONGO_URI"]);
 
 // connect to DB
 void mongoose.connect(process.env.MONGO_URI ?? "");
