@@ -35,14 +35,17 @@ The frontend keeps its own copy of the API contract. These files must always agr
    rejects.
 5. **Query keys** → add to `src/constants/queryKeys.ts` (use `entityKeys` for a new entity; add
    nested keys like `byAcademy` when the endpoint is nested).
-6. **Envelopes**: lists → `PaginatedResponse<T>`; single resources → `ApiResponse<T>`; deletes →
-   `{ success: true }` (+ maybe `data: {}` / `message`); login/register/reset →
-   `AuthTokenResponse` (token ignored — the httpOnly cookie authenticates).
+6. **Envelopes** (all in `src/types/api.ts`): lists (incl. nested lists) → `PaginatedResponse<T>`;
+   single resources → `ApiResponse<T>`; deletes → `EmptyResponse`; academy photo upload →
+   `MessageResponse` (`message` = new photo); login/register/reset → `AuthTokenResponse` (token
+   ignored — the httpOnly cookie authenticates).
 7. **Consume** it through a feature api function and hook (see the `frontend-feature` skill) —
    never from a component.
 8. **Verify against the running API**: with `npm run dev:api` and `npm run dev:web` running,
-   `curl -s "http://localhost:5173/api/v1/<path>"` (through the Vite proxy) and compare the JSON
-   with the type. Never print tokens or cookies.
+   request the endpoint through the Vite dev server's proxy and compare the JSON with the type.
+   Take the address from the config instead of assuming it: the dev server port is
+   `server.port` in `frontend/vite.config.ts` and the API base path is `VITE_API_BASE_URL`
+   (`frontend/.env.example`). Read-only `GET` requests only; never print tokens or cookies.
 
 ## When the backend changes
 
