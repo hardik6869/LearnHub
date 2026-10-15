@@ -30,6 +30,12 @@ void connectDB();
 // Initialize Express
 const app = express();
 
+// Behind proxies (Vercel rewrite → Render load balancer), trust that many hops so req.ip and
+// the rate limiter see the real client IP
+if (process.env.TRUST_PROXY) {
+  app.set("trust proxy", Number(process.env.TRUST_PROXY));
+}
+
 // Ensure extended query parsing (uses 'qs' library under the hood)
 app.set("query parser", "extended");
 
@@ -60,6 +66,11 @@ app.use(helmet());
 // Prevent XSS attacks
 app.use(xss());
 
+// Health check for Render; above the rate limiter so frequent probes never get a 429
+app.get("/api/v1/health", (req, res) => {
+  res.status(200).json({ success: true });
+});
+
 // Rate Limiting
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 Min
@@ -71,8 +82,8 @@ app.use(limiter);
 // Prevent Http Params Polution
 app.use(hpp());
 
-// Enable CORS
-app.use(cors());
+// Enable CORS for the frontend only, with cookies (no CLIENT_URL: no cross-origin access)
+app.use(cors({ origin: process.env.CLIENT_URL ?? false, credentials: true }));
 
 // Set Static Folder
 app.use(express.static(path.join(ROOT_DIR, "public")));

@@ -1,12 +1,23 @@
-# LearnHub API
+# LearnHub
 
-> Backend API for LearnHub application, which is an academy directory website.
+> LearnHub is an academy directory website.
+
+## Structure
+
+This is an npm workspaces monorepo:
+
+- `backend/` — the LearnHub API (Express 5 + Mongoose + TypeScript)
+
+Git hooks, commit linting and Prettier are configured at the root and apply to every workspace.
 
 ## Usage
 
-Rename "config/config.env.env" to "config/config.env" and update the value/settings to your own.
+Rename "backend/config/config.env.env" to "backend/config/config.env" and update the value/settings
+to your own.
 
 ## Install Dependencies
+
+Run once at the repository root; it installs every workspace.
 
 ```text
 npm install
@@ -15,27 +26,31 @@ npm install
 ## Run App
 
 ```text
-# Run in Dev mode (TypeScript via tsx, with watch)
-npm run dev
+# Run the API in Dev mode (TypeScript via tsx, with watch)
+npm run dev:api
 
-# Build to dist/ and run in Prod mode
+# Build to backend/dist/ and run the API in Prod mode
 npm run build
-npm start
+npm run start:api
 ```
 
-## Type Checking & Lint
+## Type Checking, Lint & Format
 
-The source is strict TypeScript in `src/`, with no `any` (enforced by ESLint).
+The source is strict TypeScript, with no `any` (enforced by ESLint).
 
 ```text
+# Typecheck + lint every workspace, then check formatting
+npm run check
+
 npm run typecheck
 npm run lint
+npm run format
 ```
 
 ## Seed Database
 
 ```text
-# Import data from _data/
+# Import data from backend/_data/
 npm run seed:i
 
 # Destroy all data

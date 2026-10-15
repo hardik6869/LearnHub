@@ -8,14 +8,14 @@ import type { UserDocument, UserRole } from "../types";
 // Protect Routes
 export const protect = asyncHandler(async (req, res, next) => {
   let token: string | undefined;
+  const cookieToken: unknown = req.cookies.token;
   if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
     // Set token from bearer token in header
     token = req.headers.authorization.split(" ")[1];
+  } else if (typeof cookieToken === "string") {
     // Set token from cookie
+    token = cookieToken;
   }
-  // else if (req.cookies.token) {
-  //   token = req.cookies.token;
-  // }
 
   // Make sure token exists
   if (!token) {

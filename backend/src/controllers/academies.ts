@@ -2,6 +2,7 @@ import path from "path";
 import type { UploadedFile } from "express-fileupload";
 import Academy from "../models/Academy";
 import ErrorResponse from "../utils/errorResponse";
+import uploadImage from "../utils/uploadImage";
 import asyncHandler from "../middleware/async";
 import { getAuthUser } from "../middleware/auth";
 import type { AcademyBody, IdParams } from "../types";
@@ -137,6 +138,20 @@ export const academyPhotoUpload = asyncHandler<unknown, IdParams>(async (req, re
         400,
       ),
     );
+  }
+
+  // In production, store the photo on Cloudinary (the server's disk does not survive deploys)
+  if (process.env.CLOUDINARY_URL) {
+    let photoUrl: string;
+    try {
+      photoUrl = await uploadImage(file, `photo-${academy.id}`);
+    } catch (err) {
+      console.log(err);
+      return next(new ErrorResponse(`Problem with file upload`, 500));
+    }
+    await Academy.findByIdAndUpdate(req.params.id, { photo: photoUrl });
+    res.status(200).json({ success: true, message: photoUrl });
+    return;
   }
 
   // Create Custom File name

@@ -1,14 +1,21 @@
-# LearnHub API
+# LearnHub
 
-Express 5 + Mongoose + strict TypeScript. Source in `src/`, compiled to `dist/`.
+npm workspaces monorepo. `backend/` is the API: Express 5 + Mongoose + strict TypeScript, source in
+`backend/src/`, compiled to `backend/dist/`. Husky, lint-staged, commitlint and Prettier live at the
+root.
 
 ## Commands
 
-- `npm run dev` — run with watch (tsx)
-- `npm run check` — typecheck + lint + format check; must pass before committing
-- `npm run seed:i` / `npm run seed:d` — import / delete the data in `_data/*.json`
+Run from the repo root (install once with `npm install` at the root):
 
-## Conventions
+- `npm run dev:api` — run the API with watch (tsx)
+- `npm run check` — typecheck + lint every workspace, then format check; must pass before committing
+- `npm run seed:i` / `npm run seed:d` — import / delete the data in `backend/_data/*.json`
+- `npm run <script> -w backend` — run any backend script directly
+
+## Backend conventions
+
+Paths below are relative to `backend/`.
 
 - Controllers are wrapped in `asyncHandler` and report errors with
   `return next(new ErrorResponse(message, status))` — never send error responses directly.
@@ -26,6 +33,6 @@ Express 5 + Mongoose + strict TypeScript. Source in `src/`, compiled to `dist/`.
 
 ## Secrets
 
-Environment lives in `config/config.env` (gitignored). Do not read, print or commit it, and never
-log tokens, passwords or decoded JWTs. New env vars go in `src/types/environment.d.ts` and the
-`config/config.env.env` template with placeholder values only.
+Environment lives in `backend/config/config.env` (gitignored). Do not read, print or commit it, and
+never log tokens, passwords or decoded JWTs. New env vars go in `backend/src/types/environment.d.ts`
+and the `backend/config/config.env.env` template with placeholder values only.
