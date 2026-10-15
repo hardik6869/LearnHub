@@ -64,9 +64,11 @@ export function AcademyCard({ academy }: AcademyCardProps) {
 
 ## Design guardrails ("simple, professional, not over-designed")
 
-- Theme tokens only: `bg-background`, `bg-card`, `bg-muted`, `text-foreground`,
-  `text-muted-foreground`, `border`, `bg-primary`, `text-destructive`. No hex colours, gradients,
-  custom shadows or inline styles. Must look right in light **and** dark mode.
+- **Light theme only** (no dark mode, no `dark:` classes in app code). Colour tokens only:
+  `bg-background`, `bg-card`, `bg-muted`, `text-foreground`, `text-muted-foreground`, `border`,
+  `border-input`, `bg-primary`, `text-destructive`. They are measured for WCAG 2.2 AA contrast
+  (see `frontend/CLAUDE.md` → Accessibility). No hex colours, gradients, custom shadows, inline
+  styles, or opacity on readable text.
 - Typography: page titles via `PageHeader`; `text-sm text-muted-foreground` for secondary text;
   `line-clamp-*` for long titles/descriptions.
 - Spacing rhythm: `gap-2/3/4/6`, sections `py-8`–`py-12`, page body
@@ -84,10 +86,18 @@ export function AcademyCard({ academy }: AcademyCardProps) {
 - Header navigation collapses into `MobileNav` below `md`.
 - Tables become cards or stack on small screens.
 
-## Accessibility checklist
+## Accessibility checklist (WCAG 2.2 AA — full rules in `frontend/CLAUDE.md`)
 
+- Contrast: text ≥ 4.5:1, controls/focus/meaningful icons ≥ 3:1 — achieved by using the tokens
+  as-is; never lighten text with opacity or place text on images without a solid overlay.
+- Colour is never the only signal: errors have text, badges have labels, body links underlined.
+- Keyboard: everything reachable and operable, logical tab order, focus always visible and not
+  hidden by the sticky header.
 - Real `<button>` / `<Link>` (use `Button asChild` around `Link` for link-styled buttons).
-- Every input has a `FieldLabel`; errors via `FieldError`; `aria-invalid` on invalid inputs.
-- Icon-only buttons have `aria-label`; dialogs have a title (and `sr-only` description if hidden).
-- Focus stays visible (shadcn rings); don't remove outlines.
+- Every input has a visible `FieldLabel`; required fields marked in text; errors via `FieldError`
+  with `aria-invalid`; `autoComplete` on personal fields.
+- Icon-only buttons have `aria-label`; decorative icons `aria-hidden`; images have `alt`.
+- One `<h1>` per page, headings in order; unique page title via `useDocumentTitle`.
+- Dialogs have a title (and `sr-only` description if hidden); Radix handles focus trapping.
 - Status regions: `LoadingState` already uses `role="status"`.
+- Works at 320 px and 200% zoom without horizontal scroll; respect `prefers-reduced-motion`.

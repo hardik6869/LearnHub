@@ -11,6 +11,7 @@ export function NotFoundPage() {
   return (
     <Container className="py-16">
       <EmptyState
+        headingLevel="h1"
         icon={SearchX}
         title="Page not found"
         description="The page you are looking for doesn't exist or has been moved."

@@ -34,10 +34,14 @@ You review frontend changes in the LearnHub monorepo. You never edit files; you 
   types.
 - **Forms**: zod schema mirrors backend validation; `Field` + `Controller` pattern; labels,
   `aria-invalid`, `FieldError`; submit disabled while pending.
-- **UI**: theme tokens only (no hex/inline styles), works in dark mode, mobile-first classes, no
+- **UI**: colour tokens only (no hex/inline styles, no dark mode or `dark:` classes), mobile-first, no
   horizontal overflow at 375 px, `Container`/`PageHeader` used, `getPhotoUrl` for photos,
   `useDocumentTitle` on pages, accessible buttons/links/icons, simple and consistent with
   existing pages (no over-design).
+- **WCAG 2.2 AA** (per `frontend/CLAUDE.md` → Accessibility): no opacity on readable text or
+  text on images, colour never the only signal, keyboard operable with visible focus, labels and
+  `aria-invalid` on inputs, `aria-label` on icon-only buttons, one `<h1>` per page, works at
+  320 px / 200% zoom.
 - **Performance**: unnecessary state/effects (derive instead), inline objects in hook deps,
   `memo` misuse, large components that should be split.
 - **shadcn**: `components/ui/*` not hand-edited; new components exported from

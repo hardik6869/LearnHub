@@ -7,6 +7,7 @@ interface ErrorStateProps {
   message?: string;
   /** Shows a "Try again" button, e.g. a query's refetch */
   onRetry?: () => void;
+  headingLevel?: "h1" | "h2";
   className?: string;
 }
 
@@ -14,6 +15,7 @@ export function ErrorState({
   title = "Something went wrong",
   message = "We couldn't load this content. Please try again.",
   onRetry,
+  headingLevel,
   className,
 }: ErrorStateProps) {
   return (
@@ -21,6 +23,7 @@ export function ErrorState({
       icon={AlertTriangle}
       title={title}
       description={message}
+      headingLevel={headingLevel}
       className={className}
       action={
         onRetry && (

@@ -8,10 +8,19 @@ interface EmptyStateProps {
   icon?: LucideIcon;
   /** e.g. a "Clear filters" or "Create" button */
   action?: ReactNode;
+  /** "h1" when the state is the whole page (404, error page); "h2" inside a page section */
+  headingLevel?: "h1" | "h2";
   className?: string;
 }
 
-export function EmptyState({ title, description, icon: Icon, action, className }: EmptyStateProps) {
+export function EmptyState({
+  title,
+  description,
+  icon: Icon,
+  action,
+  headingLevel: Heading = "h2",
+  className,
+}: EmptyStateProps) {
   return (
     <div
       className={cn(
@@ -25,7 +34,7 @@ export function EmptyState({ title, description, icon: Icon, action, className }
         </div>
       )}
       <div className="max-w-sm space-y-1">
-        <h2 className="text-lg font-semibold">{title}</h2>
+        <Heading className="text-lg font-semibold">{title}</Heading>
         {description && <p className="text-sm text-muted-foreground">{description}</p>}
       </div>
       {action}

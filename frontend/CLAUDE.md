@@ -1,16 +1,17 @@
 # LearnHub Web (frontend)
 
 React 19 + Vite 8 + strict TypeScript · Tailwind CSS v4 · shadcn/ui v4 (Radix base, Nova preset,
-neutral, light/dark) · react-router v8 (data router) · TanStack Query v5 · axios ·
-react-hook-form + zod v4 · sonner toasts · lucide-react.
+neutral) · react-router v8 (data router) · TanStack Query v5 · axios · react-hook-form + zod v4 ·
+sonner toasts · lucide-react.
 
-Theme: own `ThemeProvider` / `useTheme` (`components/layout`), with the first paint set by the
-inline script in `index.html` (same `theme` localStorage key). Don't use `next-themes`'
-provider — it renders a `<script>` React 19 warns about; the package stays only because the
-generated `ui/sonner.tsx` imports it, and `AppToaster` passes the theme to the toaster.
+**Light theme only, WCAG 2.2 AA.** There is no theme switching and no dark mode: don't add a
+theme toggle, `ThemeProvider`, `.dark` tokens or `dark:` classes in app code. The `dark:`
+classes inside generated `ui/*` stay inert (the `dark` variant only matches a `.dark` class that
+is never set). `next-themes` is installed only because the generated `ui/sonner.tsx` imports
+it; `AppToaster` forces `theme="light"`. See "Accessibility (WCAG 2.2 AA)" below.
 
 Goal for every screen: **simple, professional, responsive — not over-designed.** Use shadcn
-components and theme tokens; no custom colours, gradients or heavy decoration.
+components and the colour tokens; no custom colours, gradients or heavy decoration.
 
 ## Commands (from the repo root)
 
@@ -22,21 +23,21 @@ components and theme tokens; no custom colours, gradients or heavy decoration.
 
 ## Folder map (`src/`)
 
-| Folder               | Holds                                                                                                                                     |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `app/`               | `App`, `Providers` (theme, React Query, toaster, devtools), `queryClient`, `router.tsx`                                                   |
-| `api/`               | `apiClient` (axios), `http` helpers, `ApiError`, `getErrorMessage`                                                                        |
-| `config/`            | `env` (typed `import.meta.env`)                                                                                                           |
-| `constants/`         | `API_ROUTES`, `ROUTES` / `ROUTE_PATHS`, `queryKeys`, `MAIN_NAV`, app constants                                                            |
-| `enums/`             | `CAREERS`, `MINIMUM_SKILLS`, `USER_ROLES`, `ASSIGNABLE_ROLES` + labels/options                                                            |
-| `types/`             | API JSON shapes (`Academy`, `Course`, `Review`, `User`), envelopes, payloads, `ListParams`                                                |
-| `lib/`               | `cn`, `toQueryString`, `getPhotoUrl`, `formatCurrency/Date/Rating`                                                                        |
-| `hooks/`             | shared hooks: `useDebounce`, `useMediaQuery`, `useDocumentTitle`                                                                          |
-| `components/ui/`     | shadcn-generated components — kebab-case, **never hand-edited**                                                                           |
-| `components/common/` | reusable app components: `Container`, `PageHeader`, `LoadingState`, `EmptyState`, `ErrorState`, `ConfirmDialog`, `DataPagination`         |
-| `components/layout/` | `RootLayout`, `Header`, `MobileNav`, `MainNav`, `Footer`, `Logo`, `ThemeToggle`, `ThemeProvider`, `useTheme`, `AppToaster`, `AuthActions` |
-| `features/<name>/`   | one module each: `api/ hooks/ components/ pages/ schemas/ types.ts index.ts` (see `features/README.md`)                                   |
-| `pages/`             | app-level pages: `HomePage` (lazy), `NotFoundPage`, `RouteErrorPage`                                                                      |
+| Folder               | Holds                                                                                                                             |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `app/`               | `App`, `Providers` (React Query, toaster, devtools), `queryClient`, `router.tsx`                                                  |
+| `api/`               | `apiClient` (axios), `http` helpers, `ApiError`, `getErrorMessage`                                                                |
+| `config/`            | `env` (typed `import.meta.env`)                                                                                                   |
+| `constants/`         | `API_ROUTES`, `ROUTES` / `ROUTE_PATHS`, `queryKeys`, `MAIN_NAV`, app constants                                                    |
+| `enums/`             | `CAREERS`, `MINIMUM_SKILLS`, `USER_ROLES`, `ASSIGNABLE_ROLES` + labels/options                                                    |
+| `types/`             | API JSON shapes (`Academy`, `Course`, `Review`, `User`), envelopes, payloads, `ListParams`                                        |
+| `lib/`               | `cn`, `toQueryString`, `getPhotoUrl`, `formatCurrency/Date/Rating`                                                                |
+| `hooks/`             | shared hooks: `useDebounce`, `useDocumentTitle`                                                                                   |
+| `components/ui/`     | shadcn-generated components — kebab-case, **never hand-edited**                                                                   |
+| `components/common/` | reusable app components: `Container`, `PageHeader`, `LoadingState`, `EmptyState`, `ErrorState`, `ConfirmDialog`, `DataPagination` |
+| `components/layout/` | `RootLayout`, `Header`, `MobileNav`, `MainNav`, `Footer`, `Logo`, `AppToaster`, `AuthActions`                                     |
+| `features/<name>/`   | one module each: `api/ hooks/ components/ pages/ schemas/ types.ts index.ts` (see `features/README.md`)                           |
+| `pages/`             | app-level pages: `HomePage` (lazy), `NotFoundPage`, `RouteErrorPage`                                                              |
 
 ## Naming
 
@@ -125,16 +126,64 @@ component):
 - Tailwind utilities only, merged with `cn()`; theme tokens (`bg-background`, `text-muted-foreground`,
   `border`, `bg-primary`…) — never hard-coded colours or inline styles. Prettier sorts classes.
 - **Mobile-first**: base styles for phones, then `sm:` / `md:` / `lg:`. Page width via
-  `<Container>`. Check 375 px, 768 px, 1280 px and dark mode.
+  `<Container>`. Check 375 px, 768 px and 1280 px, and 200% browser zoom.
 - Every page: `useDocumentTitle("…")`, `<PageHeader>`, and explicit loading
   (`LoadingState`), empty (`EmptyState`) and error (`ErrorState` with `onRetry={refetch}`) states.
 - Destructive actions confirm with `ConfirmDialog` (`destructive`, `isPending`).
-- Accessibility: real `<button>`/`<Link>`, labels on inputs, `aria-label` on icon-only buttons,
-  `aria-hidden` on decorative icons.
+- Accessibility: follow the WCAG section below.
 - Performance: keep components small; derive values instead of syncing state; `memo` only for
   items rendered in long lists; never create query keys or objects inline in deps without need.
 - Photos: always `getPhotoUrl(academy.photo)` (Cloudinary URL or `/uploads/<file>`; `null` →
   placeholder).
+
+## Accessibility (WCAG 2.2 AA)
+
+Every screen must meet WCAG 2.2 level AA.
+
+**Colour and contrast** — the tokens in `src/styles/globals.css` are measured (ratios in the
+comment above `:root`); keep to them:
+
+| Use                                 | Classes                                          | Contrast on white      |
+| ----------------------------------- | ------------------------------------------------ | ---------------------- |
+| Body text                           | `text-foreground`                                | 19.8:1                 |
+| Secondary text (also on `bg-muted`) | `text-muted-foreground`                          | 6.5:1 (6.0:1)          |
+| Errors, destructive actions         | `text-destructive`, destructive `Button` variant | 8.4:1                  |
+| Input / control borders             | `border-input`                                   | 4.0:1 (needs ≥ 3:1)    |
+| Decorative dividers only            | `border`, `Separator`                            | not a control boundary |
+| Focus ring                          | built into shadcn components (`ring`)            | 17.9:1                 |
+
+- Text ≥ 4.5:1 (large text ≥ 3:1); UI component boundaries, focus indicators and meaningful
+  icons ≥ 3:1 (1.4.3, 1.4.11). Never lower contrast with opacity on text (`text-foreground/60`,
+  `opacity-50` on readable content) or put text on images without a solid overlay.
+- **Don't change a colour token** without re-measuring every pair above; no hard-coded colours.
+- **Never use colour alone** to convey meaning (1.4.1): errors have text (`FieldError`), status
+  badges have a label, toasts have icons, links in body text are underlined.
+
+**Keyboard and focus**
+
+- Everything works with the keyboard alone (2.1.1); tab order follows the visual order; no
+  positive `tabIndex`. Use real `<button>` / `<Link>` (`Button asChild` around `Link`).
+- Focus is always visible (2.4.7) — never `outline-none` without the shadcn ring replacement — and
+  never hidden behind the sticky header (2.4.11).
+- Dialogs/sheets trap focus and return it on close (Radix does this; don't rebuild them).
+
+**Structure and names**
+
+- One `<h1>` per page (`PageHeader`), headings in order; landmarks from `RootLayout`
+  (`header`, `nav`, `main`, `footer`). Every page sets a unique title (`useDocumentTitle`).
+- Inputs have a visible `FieldLabel`; required fields marked in text; errors linked via
+  `aria-invalid` + `FieldError` and described in words (3.3.1, 3.3.2). Use `autoComplete` on
+  personal fields (name, email, current/new password) (1.3.5).
+- Icon-only buttons have `aria-label`; decorative icons `aria-hidden`; images have `alt`
+  (academy photo → academy name; decorative → `alt=""`).
+- Loading uses `LoadingState` (`role="status"`); async results and errors are announced (toasts,
+  `FieldError`).
+
+**Layout**
+
+- Works at 320 px width and 200% zoom without horizontal scrolling (1.4.10); text can be spaced
+  (1.4.12); tap targets ≥ 24×24 px (2.5.8) — shadcn button sizes already are.
+- Respect `prefers-reduced-motion` for any added animation (`motion-safe:` / `motion-reduce:`).
 
 ## shadcn notes
 

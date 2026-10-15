@@ -27,7 +27,10 @@ export function MainNav({ orientation = "horizontal", onNavigate, className }: M
           className={({ isActive }) =>
             cn(
               "rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted",
-              isActive ? "bg-muted text-foreground" : "text-muted-foreground",
+              // Active link: weight + underline as well as colour (WCAG 1.4.1); NavLink sets aria-current
+              isActive
+                ? "bg-muted font-semibold text-foreground underline underline-offset-4"
+                : "text-muted-foreground",
               vertical && "text-base",
             )
           }
