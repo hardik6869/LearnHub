@@ -7,6 +7,7 @@
 This is an npm workspaces monorepo:
 
 - `backend/` — the LearnHub API (Express 5 + Mongoose + TypeScript)
+- `frontend/` — the LearnHub web app (React + Vite + TypeScript + Tailwind CSS + shadcn/ui)
 
 Git hooks, commit linting and Prettier are configured at the root and apply to every workspace.
 
@@ -29,9 +30,13 @@ npm install
 # Run the API in Dev mode (TypeScript via tsx, with watch)
 npm run dev:api
 
-# Build to backend/dist/ and run the API in Prod mode
+# Run the web app on http://localhost:5173 (proxies /api to the API, so start both)
+npm run dev:web
+
+# Build both workspaces, then run the API / preview the web app in Prod mode
 npm run build
 npm run start:api
+npm run preview:web
 ```
 
 ## Type Checking, Lint & Format
