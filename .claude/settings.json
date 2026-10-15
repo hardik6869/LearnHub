@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run check)",
+      "Bash(npm run typecheck)",
+      "Bash(npm run lint)",
+      "Bash(npm run format)",
+      "Bash(npm run format:check)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ],
+    "deny": [
+      "Read(./config/config.env)",
+      "Edit(./config/config.env)",
+      "Bash(cat config/config.env)",
+      "Bash(git push --force:*)"
+    ]
+  }
+}

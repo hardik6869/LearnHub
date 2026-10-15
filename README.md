@@ -36,10 +36,10 @@ npm run lint
 
 ```text
 # Import data from _data/
-npm run seed:import
+npm run seed:i
 
 # Destroy all data
-npm run seed:destroy
+npm run seed:d
 ```
 
 - Version: 1.0.0
