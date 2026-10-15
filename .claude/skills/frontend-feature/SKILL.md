@@ -46,8 +46,10 @@ import type {
   Academy,
   AcademyPayload,
   ApiResponse,
+  EmptyResponse,
   Id,
   ListParams,
+  MessageResponse,
   PaginatedResponse,
 } from "@/types";
 
@@ -66,16 +68,22 @@ export const academiesApi = {
   update: async (id: Id, payload: Partial<AcademyPayload>) =>
     (await http.put<ApiResponse<Academy>>(API_ROUTES.academies.detail(id), payload)).data,
 
-  remove: (id: Id) => http.delete<{ success: true }>(API_ROUTES.academies.detail(id)),
+  remove: (id: Id) => http.delete<EmptyResponse>(API_ROUTES.academies.detail(id)),
 
   // Files go as FormData; the backend reads the "file" field
   uploadPhoto: (id: Id, file: File) => {
     const body = new FormData();
     body.append("file", file);
-    return http.put<{ success: true; message: string }>(API_ROUTES.academies.photo(id), body);
+    // `message` is the new photo (Cloudinary URL or file name) — pass it to getPhotoUrl()
+    return http.put<MessageResponse>(API_ROUTES.academies.photo(id), body);
   },
 };
 ```
+
+Courses and reviews are **created through the nested route** of their academy
+(`http.post(API_ROUTES.academies.courses(academyId), payload)`); `API_ROUTES.courses.list` /
+`reviews.list` are read-only lists. Nested lists (`academies.courses(id)`, `academies.reviews(id)`)
+return a normal `PaginatedResponse`.
 
 ## 3. Hooks — `hooks/`
 
