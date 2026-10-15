@@ -1,5 +1,4 @@
 import { Monitor, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 import {
   Button,
   DropdownMenu,
@@ -8,12 +7,14 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui";
+import { isTheme, type Theme } from "./themeContext";
+import { useTheme } from "./useTheme";
 
-const THEMES = [
+const THEME_OPTIONS: readonly { value: Theme; label: string; icon: typeof Sun }[] = [
   { value: "light", label: "Light", icon: Sun },
   { value: "dark", label: "Dark", icon: Moon },
   { value: "system", label: "System", icon: Monitor },
-] as const;
+];
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -27,8 +28,13 @@ export function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuRadioGroup value={theme ?? "system"} onValueChange={setTheme}>
-          {THEMES.map(({ value, label, icon: Icon }) => (
+        <DropdownMenuRadioGroup
+          value={theme}
+          onValueChange={(value) => {
+            if (isTheme(value)) setTheme(value);
+          }}
+        >
+          {THEME_OPTIONS.map(({ value, label, icon: Icon }) => (
             <DropdownMenuRadioItem key={value} value={value}>
               <Icon aria-hidden />
               {label}
