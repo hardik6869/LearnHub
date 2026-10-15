@@ -6,12 +6,7 @@ const toErrorDetails = (err: unknown): ErrorDetails =>
   typeof err === "object" && err !== null ? err : {};
 
 // Express recognises error handlers by their four parameters, so `_next` must stay
-const errorHandler = (
-  err: unknown,
-  req: Request,
-  res: Response,
-  _next: NextFunction,
-): void => {
+const errorHandler = (err: unknown, req: Request, res: Response, _next: NextFunction): void => {
   const details = toErrorDetails(err);
   let error: ErrorDetails = {
     statusCode: details.statusCode,

@@ -1,5 +1,6 @@
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
+import prettier from "eslint-config-prettier";
 
 export default tseslint.config(
   { ignores: ["dist/**", "node_modules/**", "*.mjs"] },
@@ -31,4 +32,6 @@ export default tseslint.config(
       "no-useless-escape": "off",
     },
   },
+  // Must stay last: turns off rules that conflict with Prettier
+  prettier,
 );

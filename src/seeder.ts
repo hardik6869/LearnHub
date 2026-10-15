@@ -19,9 +19,7 @@ void mongoose.connect(process.env.MONGO_URI ?? "");
 
 /// Read JSON files
 const readSeed = <T>(file: string): Seed<T>[] => {
-  const raw: unknown = JSON.parse(
-    fs.readFileSync(path.join(ROOT_DIR, "_data", file), "utf-8"),
-  );
+  const raw: unknown = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, "_data", file), "utf-8"));
   return raw as Seed<T>[];
 };
 

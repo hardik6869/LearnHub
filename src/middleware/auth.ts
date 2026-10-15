@@ -8,10 +8,7 @@ import type { UserDocument, UserRole } from "../types";
 // Protect Routes
 export const protect = asyncHandler(async (req, res, next) => {
   let token: string | undefined;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
     // Set token from bearer token in header
     token = req.headers.authorization.split(" ")[1];
     // Set token from cookie
@@ -29,9 +26,7 @@ export const protect = asyncHandler(async (req, res, next) => {
     //verify Token
     const decoded = jwt.verify(token, process.env.JWT_SECRET ?? "");
     const id =
-      typeof decoded === "object" && typeof decoded.id === "string"
-        ? decoded.id
-        : undefined;
+      typeof decoded === "object" && typeof decoded.id === "string" ? decoded.id : undefined;
     req.user = await User.findById(id);
     next();
   } catch {
@@ -53,12 +48,7 @@ export const authorize = (...roles: UserRole[]) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const user = getAuthUser(req);
     if (!roles.includes(user.role)) {
-      next(
-        new ErrorResponse(
-          `User role ${user.role} is not authorized to access this route`,
-          403,
-        ),
-      );
+      next(new ErrorResponse(`User role ${user.role} is not authorized to access this route`, 403));
       return;
     }
     next();

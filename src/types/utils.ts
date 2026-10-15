@@ -8,5 +8,4 @@ export interface EmailOptions {
 }
 
 // Seed documents as stored in _data/*.json (ids and refs are plain strings)
-export type Seed<T> = Omit<T, "user" | "academy" | "createdAt"> &
-  RefIds & { _id: string };
+export type Seed<T> = Omit<T, "user" | "academy" | "createdAt"> & RefIds & { _id: string };

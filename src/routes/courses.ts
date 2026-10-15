@@ -17,10 +17,7 @@ const router = express.Router({ mergeParams: true });
 
 router
   .route("/")
-  .get(
-    advancedResult(Course, { path: "academy", select: "name description" }),
-    getCourses,
-  )
+  .get(advancedResult(Course, { path: "academy", select: "name description" }), getCourses)
   .post(protect, authorize("publisher", "admin"), addCourse);
 router
   .route("/:id")

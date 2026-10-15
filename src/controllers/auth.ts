@@ -84,47 +84,39 @@ export const logout = asyncHandler(async (req, res) => {
 // @desc   Update User Detials
 // @route  PUT /api/v1/auth/updatedetails
 // @access Private
-export const updateDetails = asyncHandler<UpdateDetailsBody>(
-  async (req, res) => {
-    const fieldsToUpdate = {
-      name: req.body.name,
-      email: req.body.email,
-    };
+export const updateDetails = asyncHandler<UpdateDetailsBody>(async (req, res) => {
+  const fieldsToUpdate = {
+    name: req.body.name,
+    email: req.body.email,
+  };
 
-    const user = await User.findByIdAndUpdate(
-      getAuthUser(req).id,
-      fieldsToUpdate,
-      {
-        new: true,
-        runValidators: true,
-      },
-    );
+  const user = await User.findByIdAndUpdate(getAuthUser(req).id, fieldsToUpdate, {
+    new: true,
+    runValidators: true,
+  });
 
-    res.status(200).json({ success: true, data: user });
-  },
-);
+  res.status(200).json({ success: true, data: user });
+});
 
 // @desc   Update Password
 // @route  PUT /api/v1/auth/updatepassword
 // @access Private
-export const updatePassword = asyncHandler<UpdatePasswordBody>(
-  async (req, res, next) => {
-    const user = await User.findById(getAuthUser(req).id).select("+password");
+export const updatePassword = asyncHandler<UpdatePasswordBody>(async (req, res, next) => {
+  const user = await User.findById(getAuthUser(req).id).select("+password");
 
-    // Check current password (a missing user fails here, as before)
-    if (!user) {
-      throw new TypeError("Cannot read properties of null (reading 'matchPassword')");
-    }
-    if (!(await user.matchPassword(req.body.currentPassword))) {
-      return next(new ErrorResponse("Password is incorrect", 401));
-    }
+  // Check current password (a missing user fails here, as before)
+  if (!user) {
+    throw new TypeError("Cannot read properties of null (reading 'matchPassword')");
+  }
+  if (!(await user.matchPassword(req.body.currentPassword))) {
+    return next(new ErrorResponse("Password is incorrect", 401));
+  }
 
-    user.password = req.body.newPassword;
-    await user.save();
+  user.password = req.body.newPassword;
+  await user.save();
 
-    void sendTokenResponse(user, 200, res);
-  },
-);
+  void sendTokenResponse(user, 200, res);
+});
 
 // Get Token from model, create cookie and send response.
 // Kept async and un-awaited by callers to preserve existing behaviour (see review).
@@ -137,9 +129,7 @@ const sendTokenResponse = async (
   const token = user.getSignedJwtToken();
 
   const options: CookieOptions = {
-    expires: new Date(
-      Date.now() + Number(process.env.JWT_COOKIE_EXPIRE) * 24 * 60 * 60 * 1000,
-    ),
+    expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRE) * 24 * 60 * 60 * 1000),
     httpOnly: true,
   };
 
@@ -147,79 +137,73 @@ const sendTokenResponse = async (
     options.secure = true;
   }
 
-  res
-    .status(statusCode)
-    .cookie("token", token, options)
-    .json({ success: true, token });
+  res.status(statusCode).cookie("token", token, options).json({ success: true, token });
 };
 
 // @desc   Forgot Password
 // @route  POST /api/v1/auth/forgotpassword
 // @access public
-export const forgotPassword = asyncHandler<ForgotPasswordBody>(
-  async (req, res, next) => {
-    const user = await User.findOne({ email: req.body.email });
+export const forgotPassword = asyncHandler<ForgotPasswordBody>(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
 
-    if (!user) {
-      return next(new ErrorResponse("There is no user with that email", 404));
-    }
+  if (!user) {
+    return next(new ErrorResponse("There is no user with that email", 404));
+  }
 
-    // Get Reset Token
-    const resetToken = user.getResetPasswordToken();
+  // Get Reset Token
+  const resetToken = user.getResetPasswordToken();
+
+  await user.save({ validateBeforeSave: false });
+
+  // Crete reset url
+  const resetUrl = `${req.protocol}://${String(req.get("host"))}/api/v1/auth/resetpassword/${resetToken}`;
+
+  const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: "Password Reset Token",
+      message,
+    });
+
+    res.status(200).json({ success: true, data: "Email Sent" });
+  } catch (err) {
+    console.log(err);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
 
     await user.save({ validateBeforeSave: false });
-
-    // Crete reset url
-    const resetUrl = `${req.protocol}://${String(req.get("host"))}/api/v1/auth/resetpassword/${resetToken}`;
-
-    const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
-
-    try {
-      await sendEmail({
-        to: user.email,
-        subject: "Password Reset Token",
-        message,
-      });
-
-      res.status(200).json({ success: true, data: "Email Sent" });
-    } catch (err) {
-      console.log(err);
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpire = undefined;
-
-      await user.save({ validateBeforeSave: false });
-      return next(new ErrorResponse("Email could not be sent", 500));
-    }
-  },
-);
+    return next(new ErrorResponse("Email could not be sent", 500));
+  }
+});
 
 // @desc   Reset Password
 // @route  PUT /api/v1/auth/resetpassword/:resettoken
 // @access Public
-export const resetPassword = asyncHandler<
-  ResetPasswordBody,
-  ResetPasswordParams
->(async (req, res, next) => {
-  // get hashed token
-  const resetPasswordToken = crypto
-    .createHash("sha256")
-    .update(req.params.resettoken)
-    .digest("hex");
+export const resetPassword = asyncHandler<ResetPasswordBody, ResetPasswordParams>(
+  async (req, res, next) => {
+    // get hashed token
+    const resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(req.params.resettoken)
+      .digest("hex");
 
-  const user = await User.findOne({
-    resetPasswordToken,
-    resetPasswordExpire: { $gt: Date.now() },
-  });
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
 
-  if (!user) {
-    return next(new ErrorResponse("Invalid Token", 400));
-  }
+    if (!user) {
+      return next(new ErrorResponse("Invalid Token", 400));
+    }
 
-  // Set new passwords
-  user.password = req.body.password;
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpire = undefined;
-  await user.save();
+    // Set new passwords
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
 
-  void sendTokenResponse(user, 200, res);
-});
+    void sendTokenResponse(user, 200, res);
+  },
+);
