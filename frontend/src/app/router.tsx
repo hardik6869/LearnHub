@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+import { PageLoading } from "@/components/common";
 import { RootLayout } from "@/components/layout";
 import { ROUTE_PATHS } from "@/constants";
 import { NotFoundPage, RouteErrorPage } from "@/pages";
@@ -8,6 +9,9 @@ import { NotFoundPage, RouteErrorPage } from "@/pages";
 export const router = createBrowserRouter([
   {
     Component: RootLayout,
+    // Rendered on the very first load until the initial lazy page has downloaded. Without it
+    // React Router warns "No HydrateFallback element provided" and renders nothing meanwhile.
+    HydrateFallback: PageLoading,
     // Errors outside a page (e.g. in the layout itself) replace the whole screen
     ErrorBoundary: RouteErrorPage,
     children: [
