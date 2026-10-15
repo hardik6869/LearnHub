@@ -38,7 +38,7 @@ export function AcademyPhotoUpload({ academy }: { academy: Academy }) {
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-[12rem_1fr] sm:items-start">
-      <AcademyPhoto academy={academy} fit="contain" />
+      <AcademyPhoto academy={academy} fit="contain" className="max-h-40 w-full max-w-48" />
       <div className="space-y-4">
         <Field data-invalid={Boolean(error)}>
           <FieldLabel htmlFor="academy-photo">Photo</FieldLabel>

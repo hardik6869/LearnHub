@@ -47,7 +47,7 @@ export function AcademyDetailPage() {
         <AcademyPhoto
           academy={academy}
           fit="contain"
-          className="w-full lg:aspect-auto lg:h-full lg:min-h-72"
+          className="max-h-112 min-h-48 w-full lg:aspect-auto lg:h-full lg:self-center"
         />
         <AcademyInfo academy={academy} className="order-first h-full lg:order-none" />
       </div>

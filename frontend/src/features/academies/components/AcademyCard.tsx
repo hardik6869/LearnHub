@@ -17,7 +17,7 @@ export const AcademyCard = memo(function AcademyCard({ academy }: { academy: Aca
 
   return (
     <Card className="relative h-full gap-0 overflow-hidden py-0 transition-shadow hover:shadow-md">
-      <AcademyPhoto academy={academy} className="aspect-2/1 rounded-none" />
+      <AcademyPhoto academy={academy} className="aspect-2/1 max-h-56 rounded-none" />
       <div className="flex flex-1 flex-col gap-3 p-4">
         <div className="space-y-1">
           <h2 className="text-base leading-snug font-semibold">
