@@ -9,13 +9,9 @@ import type { AcademyParams, CourseBody, IdParams } from "../types";
 // @route  GET /api/v1/courses
 // @route  GET /api/v1/academies/:academyId/course
 // @access Public
-export const getCourses = asyncHandler<unknown, AcademyParams>(async (req, res) => {
-  if (req.params.academyId) {
-    const courses = await Course.find({ academy: req.params.academyId });
-    res.status(200).json({ success: true, count: courses.length, data: courses });
-  } else {
-    res.status(200).json(res.advancedResults);
-  }
+// Nested requests are filtered to the academy by advancedResult, so both share pagination
+export const getCourses = asyncHandler(async (req, res) => {
+  res.status(200).json(res.advancedResults);
 });
 
 // @desc   Get course
