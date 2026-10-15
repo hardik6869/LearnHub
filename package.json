@@ -9,8 +9,8 @@
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
-    "seed:import": "tsx src/seeder.ts -i",
-    "seed:destroy": "tsx src/seeder.ts -d"
+    "seed:i": "tsx src/seeder.ts -i",
+    "seed:d": "tsx src/seeder.ts -d"
   },
   "repository": {
     "type": "git",
