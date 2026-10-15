@@ -2,19 +2,32 @@ import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui";
 import { useDebounce } from "@/hooks";
+import { cn } from "@/lib";
 
-interface AcademySearchProps {
-  /** The search in the URL */
+interface SearchInputProps {
+  id: string;
+  /** Accessible name, e.g. "Search academies by name"; also the placeholder unless given */
+  label: string;
+  placeholder?: string;
+  /** The current search (usually from the URL) */
   value: string;
   onSearch: (value: string) => void;
+  className?: string;
 }
 
 // Searches as the user types, once they pause (debounced), instead of on every key press
-export function AcademySearch({ value, onSearch }: AcademySearchProps) {
+export function SearchInput({
+  id,
+  label,
+  placeholder = label,
+  value,
+  onSearch,
+  className,
+}: SearchInputProps) {
   const [text, setText] = useState(value);
   const debounced = useDebounce(text);
 
-  // The URL changed from outside (Clear filters, back button): show its value
+  // The value changed from outside (Clear filters, back button): show it
   const [lastValue, setLastValue] = useState(value);
   if (value !== lastValue) {
     setLastValue(value);
@@ -28,18 +41,18 @@ export function AcademySearch({ value, onSearch }: AcademySearchProps) {
   }, [debounced, text, value, onSearch]);
 
   return (
-    <div className="relative min-w-full flex-1 md:min-w-64">
-      <label htmlFor="academy-search" className="sr-only">
-        Search academies by name
+    <div className={cn("relative", className)}>
+      <label htmlFor={id} className="sr-only">
+        {label}
       </label>
       <Search
         className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
         aria-hidden
       />
       <Input
-        id="academy-search"
+        id={id}
         type="search"
-        placeholder="Search academies by name"
+        placeholder={placeholder}
         value={text}
         onChange={(event) => setText(event.target.value)}
         className="pl-9"

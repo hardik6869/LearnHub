@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router";
 import { PageLoading } from "@/components/common";
 import { RootLayout } from "@/components/layout";
 import { ROUTE_PATHS } from "@/constants";
-import { RequireAuth, RequireGuest } from "@/features/auth";
+import { ADMIN_ROLES, RequireAuth, RequireGuest } from "@/features/auth";
 import { NotFoundPage, RouteErrorPage } from "@/pages";
 
 // Pages are lazy-loaded by file path so each one becomes its own chunk.
@@ -86,6 +86,19 @@ export const router = createBrowserRouter([
                 path: ROUTE_PATHS.account,
                 lazy: async () => ({
                   Component: (await import("@/features/auth/pages/AccountPage")).AccountPage,
+                }),
+              },
+            ],
+          },
+
+          // Admins only
+          {
+            element: <RequireAuth roles={ADMIN_ROLES} />,
+            children: [
+              {
+                path: ROUTE_PATHS.adminUsers,
+                lazy: async () => ({
+                  Component: (await import("@/features/users/pages/UsersPage")).UsersPage,
                 }),
               },
             ],

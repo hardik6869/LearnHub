@@ -1,11 +1,11 @@
 import { X } from "lucide-react";
+import { FilterSelect } from "@/components/common";
 import { Button } from "@/components/ui";
 import { CAREER_OPTIONS } from "@/enums";
 import { formatCurrency } from "@/lib";
 import type { SelectOption } from "@/types";
 import type { AcademyFilterKey, AcademyFilterValues } from "../hooks/useAcademyListParams";
 import { FeaturesFilter } from "./FeaturesFilter";
-import { FilterSelect } from "./FilterSelect";
 
 const MAX_COST_OPTIONS: readonly SelectOption[] = [5_000, 10_000, 15_000, 20_000].map((cost) => ({
   value: String(cost),

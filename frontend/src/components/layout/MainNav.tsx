@@ -1,6 +1,6 @@
 import { NavLink } from "react-router";
-import { MAIN_NAV, ROUTES, SIGNED_IN_NAV } from "@/constants";
-import { useCurrentUser } from "@/features/auth";
+import { ADMIN_NAV, MAIN_NAV, ROUTES, SIGNED_IN_NAV } from "@/constants";
+import { ADMIN_ROLES, hasRole, useCurrentUser } from "@/features/auth";
 import { cn } from "@/lib";
 
 interface MainNavProps {
@@ -13,7 +13,11 @@ interface MainNavProps {
 export function MainNav({ orientation = "horizontal", onNavigate, className }: MainNavProps) {
   const vertical = orientation === "vertical";
   const { user } = useCurrentUser();
-  const items = user ? [...MAIN_NAV, ...SIGNED_IN_NAV] : MAIN_NAV;
+  const items = [
+    ...MAIN_NAV,
+    ...(user ? SIGNED_IN_NAV : []),
+    ...(hasRole(user, ADMIN_ROLES) ? ADMIN_NAV : []),
+  ];
 
   return (
     <nav

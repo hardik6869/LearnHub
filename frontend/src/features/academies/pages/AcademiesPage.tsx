@@ -4,8 +4,10 @@ import {
   DataPagination,
   EmptyState,
   ErrorState,
+  FilterSelect,
   LoadingState,
   PageHeader,
+  SearchInput,
 } from "@/components/common";
 import { Button } from "@/components/ui";
 import { ACADEMY_MANAGER_ROLES, hasRole, useCurrentUser } from "@/features/auth";
@@ -13,9 +15,7 @@ import { useDocumentTitle } from "@/hooks";
 import type { SelectOption } from "@/types";
 import { AcademyCard } from "../components/AcademyCard";
 import { AcademyFilters } from "../components/AcademyFilters";
-import { AcademySearch } from "../components/AcademySearch";
 import { AddAcademyButton } from "../components/AddAcademyButton";
-import { FilterSelect } from "../components/FilterSelect";
 import { useAcademies } from "../hooks/useAcademies";
 import { useAcademyListParams } from "../hooks/useAcademyListParams";
 
@@ -96,7 +96,13 @@ export function AcademiesPage() {
           Phones/tablets: search on top, then one row of filters you swipe sideways; it runs
           edge to edge (-mx/px match Container's padding) so it's clear there's more to scroll. */}
       <search className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center">
-        <AcademySearch value={filters.search} onSearch={(value) => setFilter("search", value)} />
+        <SearchInput
+          id="academy-search"
+          label="Search academies by name"
+          value={filters.search}
+          onSearch={(value) => setFilter("search", value)}
+          className="min-w-full flex-1 md:min-w-64"
+        />
         <div className="-mx-4 flex items-center gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 md:contents">
           <AcademyFilters
             values={filters}
