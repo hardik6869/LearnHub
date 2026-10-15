@@ -4,6 +4,7 @@ import { Container, PageError, PageHeader, PageLoading } from "@/components/comm
 import { Badge } from "@/components/ui";
 import { ROUTES } from "@/constants";
 import { canManage, useCurrentUser } from "@/features/auth";
+import { CourseList } from "@/features/courses";
 import { useDocumentTitle } from "@/hooks";
 import { AcademyActions } from "../components/AcademyActions";
 import { AcademyInfo } from "../components/AcademyInfo";
@@ -53,8 +54,10 @@ export function AcademyDetailPage() {
               ))}
             </ul>
           </section>
+          <CourseList academy={academy} />
         </div>
-        <aside>
+        {/* Sticky on desktop so the key facts stay visible while reading courses and reviews */}
+        <aside className="lg:sticky lg:top-24 lg:self-start">
           <AcademyInfo academy={academy} />
         </aside>
       </div>
