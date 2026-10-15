@@ -4,7 +4,9 @@ import type { UploadedFile } from "express-fileupload";
 // Uploads an image to Cloudinary (configured via CLOUDINARY_URL) and returns its HTTPS URL.
 // Overwrites any earlier upload with the same publicId.
 const uploadImage = async (file: UploadedFile, publicId: string): Promise<string> => {
-  // Configured here rather than at import time: CLOUDINARY_URL is only loaded once server.ts runs
+  // The SDK caches its config when first imported, before server.ts has loaded config.env, so
+  // re-read CLOUDINARY_URL from the environment (config(true)) before every upload
+  cloudinary.config(true);
   cloudinary.config({ secure: true });
 
   const dataUri = `data:${file.mimetype};base64,${file.data.toString("base64")}`;
