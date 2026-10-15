@@ -90,7 +90,8 @@ component → feature hook (useQuery/useMutation) → feature api fn → http.* 
 - The API sets an **httpOnly `token` cookie**; axios sends it (`withCredentials`). Never read,
   store or log the JWT — not in localStorage, state or logs. Login/register responses include
   `token`: ignore it.
-- The current user comes from `GET /auth/me` (`queryKeys.auth.me`); a 401 means signed out.
+- The current user comes from `GET /auth/me` via `useCurrentUser()` (`queryKeys.auth.me`); the
+  API answers `data: null` when signed out (no 401), so the check never logs an error.
 - Role checks mirror the backend: academies/courses — `publisher`/`admin`; reviews —
   `user`/`admin`; users — `admin`. Owners or admins may edit/delete. Hiding UI is a convenience;
   the API is the real guard.

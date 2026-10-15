@@ -70,12 +70,11 @@ export const login = asyncHandler<LoginBody>(async (req, res, next) => {
   void sendTokenResponse(user, 200, res);
 });
 
-// @desc   Get Currrent logged in user
-// @route  POST /api/v1/auth/me
-// @access Private
+// @desc   Get Currrent logged in user (null when signed out)
+// @route  GET /api/v1/auth/me
+// @access Public (optionalAuth)
 export const getMe = asyncHandler(async (req, res) => {
-  const user = await User.findById(getAuthUser(req).id);
-  res.status(200).json({ success: true, data: user });
+  res.status(200).json({ success: true, data: req.user ?? null });
 });
 
 // @desc   Log user out / clear cookie

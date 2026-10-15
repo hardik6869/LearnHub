@@ -1,4 +1,4 @@
-import { http, isApiError } from "@/api";
+import { http } from "@/api";
 import { API_ROUTES } from "@/constants";
 import type {
   ApiResponse,
@@ -15,15 +15,9 @@ import type {
 
 // Token responses set the httpOnly cookie; the token in the body is ignored on purpose
 
-// null when signed out (the API answers 401), so callers never handle that as an error
-export const getMe = async (): Promise<User | null> => {
-  try {
-    return (await http.get<ApiResponse<User>>(API_ROUTES.auth.me)).data;
-  } catch (error) {
-    if (isApiError(error) && error.isUnauthorized) return null;
-    throw error;
-  }
-};
+// The API answers 200 with null when signed out
+export const getMe = async (): Promise<User | null> =>
+  (await http.get<ApiResponse<User | null>>(API_ROUTES.auth.me)).data;
 
 export const login = async (payload: LoginPayload): Promise<void> => {
   await http.post<AuthTokenResponse>(API_ROUTES.auth.login, payload);
