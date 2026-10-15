@@ -46,6 +46,8 @@ Paths below are relative to `backend/`.
 - Roles: the schema accepts every `USER_ROLES` value (admins exist, assigned in the database),
   but a request may only set `ASSIGNABLE_ROLES` — check with `isAssignableRole(role)` →
   400 `INVALID_ROLE_MESSAGE` (register, admin create/update user). Never let a request set admin.
+  The users API never updates or deletes an admin account (403), so admins can't demote or
+  delete themselves.
 - **Whitelist request bodies**: create/update only with
   `pick(req.body, ACADEMY_FIELDS | COURSE_FIELDS | REVIEW_FIELDS)` (`src/utils/pick.ts`,
   `src/config/enums.ts`); `user`/`academy` come from the signed-in user and the route, never the
