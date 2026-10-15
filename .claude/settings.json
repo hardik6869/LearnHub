@@ -14,9 +14,6 @@
       "Read(./backend/config/config.env)",
       "Edit(./backend/config/config.env)",
       "Bash(cat backend/config/config.env)",
-      "Read(./config/config.env)",
-      "Edit(./config/config.env)",
-      "Bash(cat config/config.env)",
       "Bash(git push --force:*)"
     ]
   }
