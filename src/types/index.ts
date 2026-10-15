@@ -1,0 +1,9 @@
+// Single import point for the app's types: import type { ... } from "../types";
+export type * from "./common";
+export type * from "./academy";
+export type * from "./course";
+export type * from "./review";
+export type * from "./user";
+export type * from "./auth";
+export type * from "./middleware";
+export type * from "./utils";
