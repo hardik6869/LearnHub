@@ -5,5 +5,6 @@ export type * from "./course";
 export type * from "./review";
 export type * from "./user";
 export type * from "./auth";
+export type * from "./stats";
 export type * from "./middleware";
 export type * from "./utils";
