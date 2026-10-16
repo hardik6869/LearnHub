@@ -22,6 +22,9 @@ export const queryKeys = {
     me: ["auth", "me"] as const,
   },
   academies,
+  // Under "academies" on purpose: academy, course and review mutations all invalidate
+  // academies.all, which then refreshes the dashboard KPIs too
+  stats: [...academies.all, "stats"] as const,
   courses: {
     ...courses,
     byAcademy: (academyId: Id, params: ListParams = {}) =>
