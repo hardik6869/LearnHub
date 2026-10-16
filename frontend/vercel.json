@@ -1,0 +1,10 @@
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://learnhub-nmjz.onrender.com/api/:path*" },
+    {
+      "source": "/uploads/:path*",
+      "destination": "https://learnhub-nmjz.onrender.com/uploads/:path*"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
