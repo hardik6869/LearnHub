@@ -55,5 +55,7 @@ export interface ListParams {
   sort?: string;
   /** Comma separated field names */
   select?: string;
+  /** Case-insensitive partial match on the endpoint's search field (academies: name) */
+  search?: string;
   [field: string]: FilterValue | undefined;
 }

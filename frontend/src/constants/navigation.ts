@@ -10,3 +10,9 @@ export const MAIN_NAV: readonly NavItem[] = [
   { label: "Home", to: ROUTES.home },
   { label: "Academies", to: ROUTES.academies },
 ];
+
+// Added after MAIN_NAV when signed in
+export const SIGNED_IN_NAV: readonly NavItem[] = [{ label: "Dashboard", to: ROUTES.dashboard }];
+
+// Added after SIGNED_IN_NAV for admins
+export const ADMIN_NAV: readonly NavItem[] = [{ label: "Users", to: ROUTES.adminUsers }];

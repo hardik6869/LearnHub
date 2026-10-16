@@ -3,6 +3,8 @@ import { Link } from "react-router";
 import { Container } from "@/components/common";
 import { Button, Card, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 import { APP_NAME, ROUTES } from "@/constants";
+import { LatestAcademies } from "@/features/academies";
+import { useCurrentUser } from "@/features/auth";
 import { useDocumentTitle } from "@/hooks";
 
 const HIGHLIGHTS = [
@@ -25,6 +27,7 @@ const HIGHLIGHTS = [
 
 export function HomePage() {
   useDocumentTitle();
+  const { user } = useCurrentUser();
 
   return (
     <>
@@ -45,25 +48,33 @@ export function HomePage() {
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link to={ROUTES.register}>Create an account</Link>
+              {user ? (
+                <Link to={ROUTES.dashboard}>Go to dashboard</Link>
+              ) : (
+                <Link to={ROUTES.register}>Sign up</Link>
+              )}
             </Button>
           </div>
         </Container>
       </section>
 
-      <section>
-        <Container className="grid gap-4 py-12 sm:grid-cols-2 lg:grid-cols-3">
+      <Container className="space-y-12 py-12">
+        <LatestAcademies />
+
+        <section aria-label="Why LearnHub" className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {HIGHLIGHTS.map(({ icon: Icon, title, description }) => (
             <Card key={title}>
               <CardHeader>
                 <Icon className="mb-2 size-6 text-primary" aria-hidden />
-                <CardTitle>{title}</CardTitle>
+                <CardTitle>
+                  <h2>{title}</h2>
+                </CardTitle>
                 <CardDescription>{description}</CardDescription>
               </CardHeader>
             </Card>
           ))}
-        </Container>
-      </section>
+        </section>
+      </Container>
     </>
   );
 }

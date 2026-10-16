@@ -47,6 +47,12 @@ export const addReview = asyncHandler<ReviewBody, AcademyParams>(async (req, res
     );
   }
 
+  // One review per user per academy (also a unique index); a clear message instead of the
+  // generic duplicate-key error
+  if (await Review.exists({ academy: academy._id, user: user.id })) {
+    return next(new ErrorResponse("You have already reviewed this academy", 400));
+  }
+
   // Only client-settable fields; academy and author come from the route and the signed-in user
   const review = await Review.create({
     ...pick(req.body, REVIEW_FIELDS),

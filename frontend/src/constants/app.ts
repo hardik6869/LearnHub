@@ -11,3 +11,6 @@ export const DEFAULT_PAGE_SIZE = 12;
 export const STALE_TIME_MS = 60_000;
 
 export const SEARCH_DEBOUNCE_MS = 300;
+
+// Academy photo upload limit; mirrors MAX_FILE_UPLOAD in the backend's config.env.env template
+export const MAX_PHOTO_BYTES = 1_000_000;

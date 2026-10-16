@@ -1,0 +1,36 @@
+import { Building2 } from "lucide-react";
+import { cn, getPhotoUrl } from "@/lib";
+import type { Academy } from "@/types";
+
+interface AcademyPhotoProps {
+  academy: Pick<Academy, "name" | "photo">;
+  /**
+   * "cover" fills the 16:9 box and crops the edges, so every card in a grid has the same size.
+   * "contain" shows the whole image at its own proportions (detail page, upload preview).
+   */
+  fit?: "cover" | "contain";
+  className?: string;
+}
+
+// The academy's photo, or a neutral placeholder when it has none
+export function AcademyPhoto({ academy, fit = "cover", className }: AcademyPhotoProps) {
+  const url = getPhotoUrl(academy.photo);
+
+  return (
+    <div className={cn("aspect-video overflow-hidden rounded-lg bg-muted", className)}>
+      {url ? (
+        <img
+          src={url}
+          alt={academy.name}
+          loading="lazy"
+          decoding="async"
+          className={cn("size-full", fit === "cover" ? "object-cover" : "object-contain")}
+        />
+      ) : (
+        <div className="flex size-full items-center justify-center text-muted-foreground">
+          <Building2 className="size-10" aria-hidden />
+        </div>
+      )}
+    </div>
+  );
+}

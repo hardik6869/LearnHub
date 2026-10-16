@@ -77,9 +77,16 @@ CourseSchema.static(
   },
 );
 
-// Call getAverageCost after save
-CourseSchema.post("save", function () {
-  void Course.getAverageCost(this.academy);
+// Call getAverageCost after save. Awaited, so the response is only sent once the academy's
+// average is updated (the web app refetches the academy straight after).
+CourseSchema.post("save", async function () {
+  await Course.getAverageCost(this.academy);
+});
+
+// The update controller uses findByIdAndUpdate, which runs this query hook (not "save");
+// `doc` is the updated course, or null when none matched
+CourseSchema.post("findOneAndUpdate", async function (doc: { academy: Types.ObjectId } | null) {
+  if (doc) await Course.getAverageCost(doc.academy);
 });
 
 // Call getAverageCost after a course document is deleted

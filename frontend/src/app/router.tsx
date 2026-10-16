@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import { PageLoading } from "@/components/common";
 import { RootLayout } from "@/components/layout";
 import { ROUTE_PATHS } from "@/constants";
+import { ADMIN_ROLES, RequireAuth, RequireGuest } from "@/features/auth";
 import { NotFoundPage, RouteErrorPage } from "@/pages";
 
 // Pages are lazy-loaded by file path so each one becomes its own chunk.
@@ -23,6 +24,86 @@ export const router = createBrowserRouter([
             index: true,
             lazy: async () => ({ Component: (await import("@/pages/HomePage")).HomePage }),
           },
+          {
+            path: ROUTE_PATHS.academies,
+            lazy: async () => ({
+              Component: (await import("@/features/academies/pages/AcademiesPage")).AcademiesPage,
+            }),
+          },
+          {
+            path: ROUTE_PATHS.academyDetail,
+            lazy: async () => ({
+              Component: (await import("@/features/academies/pages/AcademyDetailPage"))
+                .AcademyDetailPage,
+            }),
+          },
+
+          // Signed-out only: redirects to ?redirect= (or home) once signed in
+          {
+            Component: RequireGuest,
+            children: [
+              {
+                path: ROUTE_PATHS.login,
+                lazy: async () => ({
+                  Component: (await import("@/features/auth/pages/LoginPage")).LoginPage,
+                }),
+              },
+              {
+                path: ROUTE_PATHS.register,
+                lazy: async () => ({
+                  Component: (await import("@/features/auth/pages/RegisterPage")).RegisterPage,
+                }),
+              },
+              {
+                path: ROUTE_PATHS.forgotPassword,
+                lazy: async () => ({
+                  Component: (await import("@/features/auth/pages/ForgotPasswordPage"))
+                    .ForgotPasswordPage,
+                }),
+              },
+              {
+                path: ROUTE_PATHS.resetPassword,
+                lazy: async () => ({
+                  Component: (await import("@/features/auth/pages/ResetPasswordPage"))
+                    .ResetPasswordPage,
+                }),
+              },
+            ],
+          },
+
+          // Any signed-in user
+          {
+            Component: RequireAuth,
+            children: [
+              {
+                path: ROUTE_PATHS.dashboard,
+                lazy: async () => ({
+                  Component: (await import("@/features/dashboard/pages/DashboardPage"))
+                    .DashboardPage,
+                }),
+              },
+              {
+                path: ROUTE_PATHS.account,
+                lazy: async () => ({
+                  Component: (await import("@/features/auth/pages/AccountPage")).AccountPage,
+                }),
+              },
+            ],
+          },
+
+          // Admins only
+          {
+            element: <RequireAuth roles={ADMIN_ROLES} />,
+            children: [
+              {
+                path: ROUTE_PATHS.adminUsers,
+                lazy: async () => ({
+                  Component: (await import("@/features/users/pages/UsersPage")).UsersPage,
+                }),
+              },
+            ],
+          },
+
           { path: ROUTE_PATHS.notFound, Component: NotFoundPage },
         ],
       },

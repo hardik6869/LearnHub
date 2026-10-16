@@ -12,7 +12,10 @@ const router = express.Router({ mergeParams: true });
 router.use(protect);
 router.use(authorize("admin"));
 
-router.route("/").get(advancedResult(User), getUsers).post(createUser);
+router
+  .route("/")
+  .get(advancedResult(User, undefined, { searchField: "name" }), getUsers)
+  .post(createUser);
 
 router.route("/:id").get(getUser).put(updateUser).delete(deleteUser);
 

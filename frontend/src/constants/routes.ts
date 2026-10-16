@@ -11,6 +11,8 @@ export const ROUTE_PATHS = {
   // Must match the link in the backend's reset email (backend/src/controllers/auth.ts)
   resetPassword: "/reset-password/:token",
   dashboard: "/dashboard",
+  account: "/account",
+  adminUsers: "/admin/users",
   notFound: "*",
 } as const;
 
@@ -24,4 +26,6 @@ export const ROUTES = {
   forgotPassword: ROUTE_PATHS.forgotPassword,
   resetPassword: (token: string) => `/reset-password/${token}`,
   dashboard: ROUTE_PATHS.dashboard,
+  account: ROUTE_PATHS.account,
+  adminUsers: ROUTE_PATHS.adminUsers,
 } as const;

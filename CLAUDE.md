@@ -29,7 +29,8 @@ Run from the repo root:
 - Frontend `types/`, `enums/` and `constants/apiRoutes.ts` mirror the backend's models, enums and
   routes — when an API route, field or enum value changes, update both sides in the same change
   (the `api-contract-checker` agent verifies this).
-- Branch from an up-to-date `main`; one feature module per branch and PR.
+- Branch from an up-to-date `main`. Related work can share one branch and PR; make one commit per
+  working step (each passing `npm run check`).
 
 ## Backend conventions
 
@@ -45,13 +46,17 @@ Paths below are relative to `backend/`.
 - Roles: the schema accepts every `USER_ROLES` value (admins exist, assigned in the database),
   but a request may only set `ASSIGNABLE_ROLES` — check with `isAssignableRole(role)` →
   400 `INVALID_ROLE_MESSAGE` (register, admin create/update user). Never let a request set admin.
+  The users API never updates or deletes an admin account (403), so admins can't demote or
+  delete themselves.
 - **Whitelist request bodies**: create/update only with
   `pick(req.body, ACADEMY_FIELDS | COURSE_FIELDS | REVIEW_FIELDS)` (`src/utils/pick.ts`,
   `src/config/enums.ts`); `user`/`academy` come from the signed-in user and the route, never the
   body. Never pass `req.body` straight to `create`/`findByIdAndUpdate`.
 - Nested routers use `express.Router({ mergeParams: true })`. List endpoints use the
   `advancedResult` middleware, which relies on the `"extended"` query parser set in `server.ts`.
-  It never lets clients select or filter `select: false` fields (`HIDDEN_FIELDS`).
+  It never lets clients select or filter `select: false` fields (`HIDDEN_FIELDS`). `?search=`
+  works only where a route passes `{ searchField }` (academies: `name`); the term is
+  regex-escaped and length-capped — never build a `$regex` from raw input.
 - `server.ts` sanitises a copy of `req.query` and pins it on the request (Express 5's
   `req.query` is a re-parsing getter, so in-place sanitising does nothing) — keep that middleware
   before anything that reads `req.query`.

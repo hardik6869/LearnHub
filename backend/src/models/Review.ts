@@ -68,9 +68,16 @@ ReviewSchema.static(
   },
 );
 
-// Call getAverageRating after save
-ReviewSchema.post("save", function () {
-  void Review.getAverageRating(this.academy);
+// Call getAverageRating after save. Awaited, so the response is only sent once the academy's
+// average is updated (the web app refetches the academy straight after).
+ReviewSchema.post("save", async function () {
+  await Review.getAverageRating(this.academy);
+});
+
+// The update controller uses findByIdAndUpdate, which runs this query hook (not "save");
+// `doc` is the updated review, or null when none matched
+ReviewSchema.post("findOneAndUpdate", async function (doc: { academy: Types.ObjectId } | null) {
+  if (doc) await Review.getAverageRating(doc.academy);
 });
 
 // Call getAverageRating after a review document is deleted
