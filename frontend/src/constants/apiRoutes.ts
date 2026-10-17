@@ -31,6 +31,8 @@ export const API_ROUTES = {
     list: "/reviews",
     detail: (id: Id) => `/reviews/${id}`,
   },
+  // Dashboard KPIs, scoped to the signed-in user's role
+  stats: "/stats",
   // Admin only
   users: {
     list: "/users",

@@ -50,6 +50,17 @@ export default defineConfig([
       "@typescript-eslint/no-unnecessary-condition": "off",
     },
   },
+  // The generated chart wrapper reads recharts' loosely typed tooltip payloads
+  {
+    files: ["src/components/ui/chart.tsx"],
+    rules: {
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
+      "@typescript-eslint/no-unnecessary-type-assertion": "off",
+    },
+  },
   // Must stay last: turns off rules that conflict with Prettier
   prettier,
 ]);

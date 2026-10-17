@@ -22,6 +22,7 @@ import courses from "./routes/courses";
 import auth from "./routes/auth";
 import users from "./routes/users";
 import reviews from "./routes/reviews";
+import stats from "./routes/stats";
 
 // Load ENV File
 dotenv.config({ path: "./config/config.env" });
@@ -105,6 +106,7 @@ app.use("/api/v1/courses", courses);
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/users", users);
 app.use("/api/v1/reviews", reviews);
+app.use("/api/v1/stats", stats);
 
 app.use(errorHandler);
 

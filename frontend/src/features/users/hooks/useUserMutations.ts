@@ -6,7 +6,12 @@ import * as usersApi from "../api/usersApi";
 
 const useInvalidateUsers = () => {
   const queryClient = useQueryClient();
-  return () => queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
+  // Stats count users by role
+  return () =>
+    Promise.all([
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.all }),
+      queryClient.invalidateQueries({ queryKey: queryKeys.stats }),
+    ]);
 };
 
 export function useCreateUser() {
