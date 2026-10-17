@@ -47,7 +47,7 @@ export const AcademyCard = memo(function AcademyCard({ academy }: { academy: Aca
 
         <div className="mt-auto flex items-center justify-between gap-2 border-t pt-3 text-sm">
           <span className="flex items-center gap-1">
-            <Star className="size-4" aria-hidden />
+            <Star className="size-4 text-warning" aria-hidden />
             {formatRating(academy.averageRating)}
           </span>
           {academy.averageCost !== undefined && (
