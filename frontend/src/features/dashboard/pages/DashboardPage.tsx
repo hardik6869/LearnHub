@@ -1,27 +1,46 @@
-import { Container, PageHeader } from "@/components/common";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router";
+import { PageHeader } from "@/components/common";
+import { Button } from "@/components/ui";
+import { ROUTES } from "@/constants";
 import { USER_ROLE_LABELS } from "@/enums";
-import { ACADEMY_MANAGER_ROLES, hasRole, REVIEWER_ROLES, useCurrentUser } from "@/features/auth";
+import { useCurrentUser } from "@/features/auth";
 import { useDocumentTitle } from "@/hooks";
-import { DashboardOverview } from "../components/DashboardOverview";
-import { MyAcademies } from "../components/MyAcademies";
-import { MyReviews } from "../components/MyReviews";
+import { ChartGrid } from "../components/ChartGrid";
+import { KpiGrid } from "../components/KpiGrid";
+import { QuickActions } from "../components/QuickActions";
+import { OVERVIEW_CHART_COUNT, ROLE_DASHBOARDS } from "../lib/dashboardConfig";
 
-// Behind RequireAuth. An overview of KPIs and charts for the user's role, then sections that
-// follow the role: publishers manage academies, students write reviews, admins see both.
+// Dashboard home (inside DashboardLayout): key figures, what to do next, and the two main charts
 export function DashboardPage() {
   useDocumentTitle("Dashboard");
   const { user } = useCurrentUser();
   if (!user) return null;
 
+  const charts = ROLE_DASHBOARDS[user.role].charts.slice(0, OVERVIEW_CHART_COUNT);
+
   return (
-    <Container className="space-y-8 py-6">
+    <>
       <PageHeader
         title={`Welcome, ${user.name}`}
         description={`${USER_ROLE_LABELS[user.role]} dashboard`}
       />
-      <DashboardOverview role={user.role} />
-      {hasRole(user, ACADEMY_MANAGER_ROLES) && <MyAcademies user={user} />}
-      {hasRole(user, REVIEWER_ROLES) && <MyReviews user={user} />}
-    </Container>
+      <KpiGrid role={user.role} />
+      <QuickActions role={user.role} />
+      <section aria-labelledby="highlights-heading" className="space-y-3">
+        <div className="flex items-center justify-between gap-4">
+          <h2 id="highlights-heading" className="text-lg font-semibold">
+            Highlights
+          </h2>
+          <Button variant="ghost" asChild>
+            <Link to={ROUTES.dashboardAnalytics}>
+              All analytics
+              <ArrowRight aria-hidden />
+            </Link>
+          </Button>
+        </div>
+        <ChartGrid charts={charts} />
+      </section>
+    </>
   );
 }

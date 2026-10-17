@@ -11,8 +11,6 @@ export const MAIN_NAV: readonly NavItem[] = [
   { label: "Academies", to: ROUTES.academies },
 ];
 
-// Added after MAIN_NAV when signed in
+// Added after MAIN_NAV when signed in. Everything role-specific (users, my academies…) lives in
+// the dashboard's own navigation.
 export const SIGNED_IN_NAV: readonly NavItem[] = [{ label: "Dashboard", to: ROUTES.dashboard }];
-
-// Added after SIGNED_IN_NAV for admins
-export const ADMIN_NAV: readonly NavItem[] = [{ label: "Users", to: ROUTES.adminUsers }];
