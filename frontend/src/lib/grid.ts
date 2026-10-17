@@ -1,10 +1,9 @@
-/**
- * Grid column classes for a list of `count` cards: as many columns as there are items, up to
- * `max` (2 or 3), so a short list never leaves a row half empty. Phones always get one column.
- * Use with `grid grid-cols-1`. Full class names, so Tailwind can find them.
- */
-export const getGridColumns = (count: number, max: 2 | 3 = 3): string => {
-  if (count <= 1) return "";
-  if (count === 2 || max === 2) return "sm:grid-cols-2";
-  return "sm:grid-cols-2 lg:grid-cols-3";
-};
+// Fixed grids, so every card has the same width whatever the count (one academy is one normal
+// card, not a full-width one) and every row the same height (auto-rows-fr). Phones get one
+// column. Full class names, so Tailwind can find them.
+
+/** Academies and courses: 1 / 2 / 3 columns */
+export const CARD_GRID = "grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3";
+
+/** Reviews are text-heavy: 1 / 2 columns */
+export const REVIEW_GRID = "grid auto-rows-fr grid-cols-1 gap-4 md:grid-cols-2";

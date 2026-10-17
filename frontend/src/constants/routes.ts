@@ -12,7 +12,9 @@ export const ROUTE_PATHS = {
   resetPassword: "/reset-password/:token",
   dashboard: "/dashboard",
   account: "/account",
-  adminUsers: "/admin/users",
+  dashboardAcademies: "/dashboard/academies",
+  dashboardReviews: "/dashboard/reviews",
+  dashboardUsers: "/dashboard/users",
   notFound: "*",
 } as const;
 
@@ -27,5 +29,7 @@ export const ROUTES = {
   resetPassword: (token: string) => `/reset-password/${token}`,
   dashboard: ROUTE_PATHS.dashboard,
   account: ROUTE_PATHS.account,
-  adminUsers: ROUTE_PATHS.adminUsers,
+  dashboardAcademies: ROUTE_PATHS.dashboardAcademies,
+  dashboardReviews: ROUTE_PATHS.dashboardReviews,
+  dashboardUsers: ROUTE_PATHS.dashboardUsers,
 } as const;

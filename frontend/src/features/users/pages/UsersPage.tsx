@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useSearchParams } from "react-router";
 import {
   ConfirmDialog,
-  Container,
   DataPagination,
   EmptyState,
   ErrorState,
@@ -33,7 +32,8 @@ const ROLE_OPTIONS: readonly SelectOption[] = Object.values(USER_ROLES).map((rol
 // "new" opens the create dialog; a user opens the edit dialog
 type Editing = User | "new" | null;
 
-// Admin only (behind RequireAuth roles={ADMIN_ROLES}). Search, role and page live in the URL.
+// Admin only (behind RequireAuth roles={ADMIN_ROLES}), inside the dashboard layout. Search, role
+// and page live in the URL.
 export function UsersPage() {
   useDocumentTitle("Users");
   const { user: currentUser } = useCurrentUser();
@@ -113,7 +113,7 @@ export function UsersPage() {
   };
 
   return (
-    <Container className="space-y-6 py-6">
+    <>
       <PageHeader
         title="Users"
         description="Manage student and publisher accounts."
@@ -168,6 +168,6 @@ export function UsersPage() {
         isPending={deleteUser.isPending}
         onConfirm={confirmDelete}
       />
-    </Container>
+    </>
   );
 }

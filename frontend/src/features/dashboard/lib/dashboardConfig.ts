@@ -8,13 +8,15 @@ import {
   Users,
 } from "lucide-react";
 import { MINIMUM_SKILL_LABELS, USER_ROLE_LABELS, type UserRole } from "@/enums";
-import { formatCurrency, formatMonth, formatNumber, formatRating } from "@/lib";
+import { formatCurrency, formatMonth, formatNumber, formatRating, type Tone } from "@/lib";
 import type { DashboardStats, StatsTotals } from "@/types";
 
 export interface KpiItem {
   key: keyof StatsTotals;
   label: string;
   icon: LucideIcon;
+  /** Defaults to "primary" */
+  tone?: Tone;
   /** Defaults to a plain number */
   format?: (value: number) => string;
 }
@@ -24,11 +26,11 @@ export interface ChartItem {
   title: string;
   description: string;
   valueLabel: string;
+  /** A --chart-N variable, so each chart has its own colour */
+  color: string;
   /** Turns an API label ("2026-05", "beginner") into display text */
   formatLabel?: (label: string) => string;
   horizontal?: boolean;
-  /** Spans the full row on wider screens */
-  wide?: boolean;
 }
 
 interface RoleDashboard {
@@ -45,13 +47,20 @@ const fromLabels =
 const KPIS = {
   users: { key: "users", label: "Users", icon: Users },
   academies: { key: "academies", label: "Academies", icon: Building2 },
-  courses: { key: "courses", label: "Courses", icon: BookOpen },
-  reviews: { key: "reviews", label: "Reviews", icon: MessageSquare },
-  averageRating: { key: "averageRating", label: "Avg. rating", icon: Star, format: formatRating },
+  courses: { key: "courses", label: "Courses", icon: BookOpen, tone: "info" },
+  reviews: { key: "reviews", label: "Reviews", icon: MessageSquare, tone: "info" },
+  averageRating: {
+    key: "averageRating",
+    label: "Avg. rating",
+    icon: Star,
+    tone: "warning",
+    format: formatRating,
+  },
   averageTuition: {
     key: "averageTuition",
     label: "Avg. tuition",
     icon: DollarSign,
+    tone: "success",
     format: formatCurrency,
   },
 } satisfies Record<string, KpiItem>;
@@ -62,20 +71,22 @@ const CHARTS = {
     title: "Reviews per month",
     description: "The last 6 months",
     valueLabel: "Reviews",
+    color: "var(--chart-1)",
     formatLabel: formatMonth,
-    wide: true,
   },
   ratings: {
     key: "ratings",
     title: "Rating distribution",
     description: "Number of reviews per rating (1–10)",
     valueLabel: "Reviews",
+    color: "var(--chart-3)",
   },
   coursesBySkill: {
     key: "coursesBySkill",
     title: "Courses by skill level",
     description: "Minimum skill a course requires",
     valueLabel: "Courses",
+    color: "var(--chart-2)",
     formatLabel: fromLabels(MINIMUM_SKILL_LABELS),
   },
   academiesByCareer: {
@@ -83,6 +94,7 @@ const CHARTS = {
     title: "Academies by career",
     description: "An academy can offer several careers",
     valueLabel: "Academies",
+    color: "var(--chart-5)",
     horizontal: true,
   },
   usersByRole: {
@@ -90,6 +102,7 @@ const CHARTS = {
     title: "Users by role",
     description: "Everyone with an account",
     valueLabel: "Users",
+    color: "var(--chart-4)",
     formatLabel: fromLabels(USER_ROLE_LABELS),
   },
 } satisfies Record<string, ChartItem>;
@@ -108,10 +121,10 @@ export const ROLE_DASHBOARDS: Record<UserRole, RoleDashboard> = {
     ],
     charts: [
       CHARTS.reviewsByMonth,
-      CHARTS.ratings,
       CHARTS.usersByRole,
-      CHARTS.academiesByCareer,
+      CHARTS.ratings,
       CHARTS.coursesBySkill,
+      CHARTS.academiesByCareer,
     ],
   },
   publisher: {

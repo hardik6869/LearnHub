@@ -1,11 +1,11 @@
 import { MessageSquare } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link } from "react-router";
-import { EmptyState, ErrorState, LoadingState } from "@/components/common";
+import { EmptyState, ErrorState, LoadingState, PageHeader } from "@/components/common";
 import { Button } from "@/components/ui";
 import { ROUTES } from "@/constants";
 import { ReviewCard, useUserReviews } from "@/features/reviews";
-import { cn, formatDate, getGridColumns } from "@/lib";
+import { formatDate, REVIEW_GRID } from "@/lib";
 import type { Review, User } from "@/types";
 
 // "Academy name · date"; the list endpoint populates the academy. Reviews are edited on the
@@ -26,6 +26,7 @@ const renderSubtitle = (review: Review): ReactNode => {
   );
 };
 
+// The user's reviews, with the page header
 export function MyReviews({ user }: { user: User }) {
   const { data, isPending, isError, refetch } = useUserReviews(user._id);
   const count = data?.data.length ?? 0;
@@ -48,7 +49,7 @@ export function MyReviews({ user }: { user: User }) {
       );
     }
     return (
-      <ul className={cn("grid grid-cols-1 gap-4", getGridColumns(count, 2))}>
+      <ul className={REVIEW_GRID}>
         {data.data.map((review) => (
           <li key={review._id}>
             <ReviewCard review={review} subtitle={renderSubtitle(review)} />
@@ -59,11 +60,12 @@ export function MyReviews({ user }: { user: User }) {
   };
 
   return (
-    <section aria-labelledby="my-reviews-heading" className="space-y-4">
-      <h2 id="my-reviews-heading" className="text-lg font-semibold">
-        My reviews{count > 0 && ` (${String(count)})`}
-      </h2>
+    <>
+      <PageHeader
+        title={count > 0 ? `My reviews (${String(count)})` : "My reviews"}
+        description="To edit or delete a review, open its academy."
+      />
       {renderContent()}
-    </section>
+    </>
   );
 }

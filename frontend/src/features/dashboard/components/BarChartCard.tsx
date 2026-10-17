@@ -18,6 +18,8 @@ interface BarChartCardProps {
   data: CountItem[];
   /** Name of the value in the tooltip, e.g. "Reviews" */
   valueLabel: string;
+  /** Bar colour, e.g. "var(--chart-2)" */
+  color?: string;
   /** Turns an API label ("2026-05", "beginner") into display text */
   formatLabel?: (label: string) => string;
   /** Bars run sideways, for long category names */
@@ -32,11 +34,12 @@ export function BarChartCard({
   description,
   data,
   valueLabel,
+  color = "var(--chart-1)",
   formatLabel,
   horizontal = false,
   className,
 }: BarChartCardProps) {
-  const config = { count: { label: valueLabel, color: "var(--chart-2)" } } satisfies ChartConfig;
+  const config = { count: { label: valueLabel, color } } satisfies ChartConfig;
   const rows = formatLabel
     ? data.map((item) => ({ ...item, label: formatLabel(item.label) }))
     : data;

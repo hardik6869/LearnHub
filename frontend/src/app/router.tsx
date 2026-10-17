@@ -2,7 +2,13 @@ import { createBrowserRouter } from "react-router";
 import { PageLoading } from "@/components/common";
 import { RootLayout } from "@/components/layout";
 import { ROUTE_PATHS } from "@/constants";
-import { ADMIN_ROLES, RequireAuth, RequireGuest } from "@/features/auth";
+import {
+  ACADEMY_MANAGER_ROLES,
+  ADMIN_ROLES,
+  RequireAuth,
+  RequireGuest,
+  REVIEWER_ROLES,
+} from "@/features/auth";
 import { NotFoundPage, RouteErrorPage } from "@/pages";
 
 // Pages are lazy-loaded by file path so each one becomes its own chunk.
@@ -76,30 +82,63 @@ export const router = createBrowserRouter([
             Component: RequireAuth,
             children: [
               {
-                path: ROUTE_PATHS.dashboard,
-                lazy: async () => ({
-                  Component: (await import("@/features/dashboard/pages/DashboardPage"))
-                    .DashboardPage,
-                }),
-              },
-              {
                 path: ROUTE_PATHS.account,
                 lazy: async () => ({
                   Component: (await import("@/features/auth/pages/AccountPage")).AccountPage,
                 }),
               },
-            ],
-          },
 
-          // Admins only
-          {
-            element: <RequireAuth roles={ADMIN_ROLES} />,
-            children: [
+              // The signed-in home: tabs above every page below
               {
-                path: ROUTE_PATHS.adminUsers,
+                path: ROUTE_PATHS.dashboard,
                 lazy: async () => ({
-                  Component: (await import("@/features/users/pages/UsersPage")).UsersPage,
+                  Component: (await import("@/features/dashboard/components/DashboardLayout"))
+                    .DashboardLayout,
                 }),
+                children: [
+                  {
+                    index: true,
+                    lazy: async () => ({
+                      Component: (await import("@/features/dashboard/pages/DashboardPage"))
+                        .DashboardPage,
+                    }),
+                  },
+                  {
+                    element: <RequireAuth roles={ACADEMY_MANAGER_ROLES} />,
+                    children: [
+                      {
+                        path: ROUTE_PATHS.dashboardAcademies,
+                        lazy: async () => ({
+                          Component: (await import("@/features/dashboard/pages/MyAcademiesPage"))
+                            .MyAcademiesPage,
+                        }),
+                      },
+                    ],
+                  },
+                  {
+                    element: <RequireAuth roles={REVIEWER_ROLES} />,
+                    children: [
+                      {
+                        path: ROUTE_PATHS.dashboardReviews,
+                        lazy: async () => ({
+                          Component: (await import("@/features/dashboard/pages/MyReviewsPage"))
+                            .MyReviewsPage,
+                        }),
+                      },
+                    ],
+                  },
+                  {
+                    element: <RequireAuth roles={ADMIN_ROLES} />,
+                    children: [
+                      {
+                        path: ROUTE_PATHS.dashboardUsers,
+                        lazy: async () => ({
+                          Component: (await import("@/features/users/pages/UsersPage")).UsersPage,
+                        }),
+                      },
+                    ],
+                  },
+                ],
               },
             ],
           },

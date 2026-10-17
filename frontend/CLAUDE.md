@@ -11,7 +11,8 @@ is never set). `next-themes` is installed only because the generated `ui/sonner.
 it; `AppToaster` forces `theme="light"`. See "Accessibility (WCAG 2.2 AA)" below.
 
 Goal for every screen: **simple, professional, responsive — not over-designed.** Use shadcn
-components and the colour tokens; no custom colours, gradients or heavy decoration.
+components and the colour tokens (indigo brand on slate neutrals, plus `success`, `warning`,
+`info`); no custom colours, gradients or heavy decoration.
 
 ## Commands (from the repo root)
 
@@ -28,10 +29,10 @@ components and the colour tokens; no custom colours, gradients or heavy decorati
 | `app/`               | `App`, `Providers` (React Query, toaster, devtools), `queryClient`, `router.tsx`                                                                         |
 | `api/`               | `apiClient` (axios), `http` helpers, `ApiError`, `getErrorMessage`                                                                                       |
 | `config/`            | `env` (typed `import.meta.env`)                                                                                                                          |
-| `constants/`         | `API_ROUTES`, `ROUTES` / `ROUTE_PATHS`, `queryKeys`, `MAIN_NAV`, app constants                                                                           |
+| `constants/`         | `API_ROUTES`, `ROUTES` / `ROUTE_PATHS`, `queryKeys`, `GUEST_NAV` / `SIGNED_IN_NAV`, app constants                                                        |
 | `enums/`             | `CAREERS`, `MINIMUM_SKILLS`, `USER_ROLES`, `ASSIGNABLE_ROLES` + labels/options                                                                           |
 | `types/`             | API JSON shapes (`Academy`, `Course`, `Review`, `User`), envelopes, payloads, `ListParams`                                                               |
-| `lib/`               | `cn`, `toQueryString`, `getPhotoUrl`, `formatCurrency/Date/Rating`                                                                                       |
+| `lib/`               | `cn`, `toQueryString`, `getPhotoUrl`, `formatCurrency/Date/Rating`, `TONE_CHIP_CLASSES`                                                                  |
 | `hooks/`             | shared hooks: `useDebounce`, `useDocumentTitle`                                                                                                          |
 | `components/ui/`     | shadcn-generated components — kebab-case, **never hand-edited**                                                                                          |
 | `components/common/` | reusable app components: `Container`, `PageHeader`, `LoadingState`, `EmptyState`, `ErrorState`, `ConfirmDialog`, `DataPagination`, form fields (`form/`) |
@@ -143,12 +144,20 @@ comment above `:root`); keep to them:
 
 | Use                                 | Classes                                          | Contrast on white      |
 | ----------------------------------- | ------------------------------------------------ | ---------------------- |
-| Body text                           | `text-foreground`                                | 19.8:1                 |
-| Secondary text (also on `bg-muted`) | `text-muted-foreground`                          | 6.5:1 (6.0:1)          |
+| Body text                           | `text-foreground`                                | 17.8:1                 |
+| Secondary text (also on `bg-muted`) | `text-muted-foreground`                          | 7.6:1 (6.9:1)          |
+| Brand: buttons, links, active state | `bg-primary`, `text-primary`                     | 8.1:1                  |
+| Tinted surface (hero, active nav)   | `bg-accent` + `text-accent-foreground`           | 9.0:1 on accent        |
+| Status text / icon chips            | `text-success` / `text-warning` / `text-info`    | 4.9 / 5.1 / 5.4:1      |
+| Status chip backgrounds             | `bg-success-muted` etc. (`TONE_CHIP_CLASSES`)    | text on them ≥ 4.7:1   |
 | Errors, destructive actions         | `text-destructive`, destructive `Button` variant | 8.4:1                  |
-| Input / control borders             | `border-input`                                   | 4.0:1 (needs ≥ 3:1)    |
+| Chart bars                          | `var(--chart-1…5)`                               | ≥ 3.2:1 (graphics)     |
+| Input / control borders             | `border-input`                                   | 4.8:1 (needs ≥ 3:1)    |
 | Decorative dividers only            | `border`, `Separator`                            | not a control boundary |
-| Focus ring                          | built into shadcn components (`ring`)            | 17.9:1                 |
+| Focus ring                          | built into shadcn components (`ring`)            | 8.1:1                  |
+
+On a `bg-primary` surface the default focus ring is invisible: override it with
+`focus-visible:border-primary-foreground focus-visible:ring-primary-foreground/60`.
 
 - Text ≥ 4.5:1 (large text ≥ 3:1); UI component boundaries, focus indicators and meaningful
   icons ≥ 3:1 (1.4.3, 1.4.11). Never lower contrast with opacity on text (`text-foreground/60`,
@@ -203,5 +212,5 @@ In `app/router.tsx`, inside the layout's inner `children`:
 },
 ```
 
-Add the path to `ROUTE_PATHS`/`ROUTES` in `constants/routes.ts` first, and to `MAIN_NAV` if it
+Add the path to `ROUTE_PATHS`/`ROUTES` in `constants/routes.ts` first, and to `GUEST_NAV` / `SIGNED_IN_NAV` if it
 belongs in the header.

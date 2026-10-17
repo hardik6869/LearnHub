@@ -1,6 +1,6 @@
 import { NavLink } from "react-router";
-import { ADMIN_NAV, MAIN_NAV, ROUTES, SIGNED_IN_NAV } from "@/constants";
-import { ADMIN_ROLES, hasRole, useCurrentUser } from "@/features/auth";
+import { GUEST_NAV, ROUTES, SIGNED_IN_NAV } from "@/constants";
+import { useCurrentUser } from "@/features/auth";
 import { cn } from "@/lib";
 
 interface MainNavProps {
@@ -13,11 +13,7 @@ interface MainNavProps {
 export function MainNav({ orientation = "horizontal", onNavigate, className }: MainNavProps) {
   const vertical = orientation === "vertical";
   const { user } = useCurrentUser();
-  const items = [
-    ...MAIN_NAV,
-    ...(user ? SIGNED_IN_NAV : []),
-    ...(hasRole(user, ADMIN_ROLES) ? ADMIN_NAV : []),
-  ];
+  const items = user ? SIGNED_IN_NAV : GUEST_NAV;
 
   return (
     <nav
@@ -33,10 +29,10 @@ export function MainNav({ orientation = "horizontal", onNavigate, className }: M
           onClick={onNavigate}
           className={({ isActive }) =>
             cn(
-              "rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted",
+              "rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground",
               // Active link: weight + underline as well as colour (WCAG 1.4.1); NavLink sets aria-current
               isActive
-                ? "bg-muted font-semibold text-foreground underline underline-offset-4"
+                ? "bg-accent font-semibold text-accent-foreground underline underline-offset-4 hover:bg-accent hover:text-accent-foreground"
                 : "text-muted-foreground",
               vertical && "text-base",
             )

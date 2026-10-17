@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui";
 import { ROUTES } from "@/constants";
 import { canManage, hasRole, REVIEWER_ROLES, useCurrentUser } from "@/features/auth";
-import { cn, getGridColumns } from "@/lib";
+import { REVIEW_GRID } from "@/lib";
 import type { Academy, Review } from "@/types";
 import { useAcademyReviews } from "../hooks/useAcademyReviews";
 import { useCreateReview, useDeleteReview, useUpdateReview } from "../hooks/useReviewMutations";
@@ -97,9 +97,8 @@ export function ReviewList({ academy }: { academy: Academy }) {
         />
       );
     }
-    // Reviews are text-heavy, so at most two per row
     return (
-      <ul className={cn("grid grid-cols-1 gap-4", getGridColumns(data.data.length, 2))}>
+      <ul className={REVIEW_GRID}>
         {data.data.map((review) => (
           <li key={review._id}>
             <ReviewCard
