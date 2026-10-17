@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui";
 import { ACADEMY_MANAGER_ROLES, hasRole, useCurrentUser } from "@/features/auth";
 import { useDocumentTitle } from "@/hooks";
+import { CARD_GRID } from "@/lib";
 import type { SelectOption } from "@/types";
 import { AcademyCard } from "../components/AcademyCard";
 import { AcademyFilters } from "../components/AcademyFilters";
@@ -66,8 +67,7 @@ export function AcademiesPage() {
         className="space-y-8 transition-opacity aria-busy:opacity-60"
         aria-busy={isPlaceholderData}
       >
-        {/* 1 column on phones, 2 on tablets, 3 on desktop; 12 per page fills every layout */}
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className={CARD_GRID}>
           {data.data.map((academy) => (
             <li key={academy._id}>
               <AcademyCard academy={academy} />

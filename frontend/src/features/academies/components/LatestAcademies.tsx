@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { LoadingState } from "@/components/common";
 import { Button } from "@/components/ui";
 import { ROUTES } from "@/constants";
+import { CARD_GRID } from "@/lib";
 import type { ListParams } from "@/types";
 import { useAcademies } from "../hooks/useAcademies";
 import { AcademyCard } from "./AcademyCard";
@@ -32,7 +33,7 @@ export function LatestAcademies() {
       {isPending ? (
         <LoadingState count={3} label="Loading academies…" />
       ) : (
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className={CARD_GRID}>
           {data.data.map((academy) => (
             <li key={academy._id}>
               <AcademyCard academy={academy} />

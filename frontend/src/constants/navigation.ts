@@ -5,12 +5,14 @@ export interface NavItem {
   to: string;
 }
 
-// Main navigation, shared by the desktop header and the mobile menu
-export const MAIN_NAV: readonly NavItem[] = [
+// Header navigation (desktop and mobile menu). Signed-in users have no separate home page: "/"
+// takes them to their dashboard, so it replaces Home.
+export const GUEST_NAV: readonly NavItem[] = [
   { label: "Home", to: ROUTES.home },
   { label: "Academies", to: ROUTES.academies },
 ];
 
-// Added after MAIN_NAV when signed in. Everything role-specific (users, my academies…) lives in
-// the dashboard's own navigation.
-export const SIGNED_IN_NAV: readonly NavItem[] = [{ label: "Dashboard", to: ROUTES.dashboard }];
+export const SIGNED_IN_NAV: readonly NavItem[] = [
+  { label: "Dashboard", to: ROUTES.dashboard },
+  { label: "Academies", to: ROUTES.academies },
+];

@@ -29,7 +29,7 @@ components and the colour tokens (indigo brand on slate neutrals, plus `success`
 | `app/`               | `App`, `Providers` (React Query, toaster, devtools), `queryClient`, `router.tsx`                                                                         |
 | `api/`               | `apiClient` (axios), `http` helpers, `ApiError`, `getErrorMessage`                                                                                       |
 | `config/`            | `env` (typed `import.meta.env`)                                                                                                                          |
-| `constants/`         | `API_ROUTES`, `ROUTES` / `ROUTE_PATHS`, `queryKeys`, `MAIN_NAV`, app constants                                                                           |
+| `constants/`         | `API_ROUTES`, `ROUTES` / `ROUTE_PATHS`, `queryKeys`, `GUEST_NAV` / `SIGNED_IN_NAV`, app constants                                                        |
 | `enums/`             | `CAREERS`, `MINIMUM_SKILLS`, `USER_ROLES`, `ASSIGNABLE_ROLES` + labels/options                                                                           |
 | `types/`             | API JSON shapes (`Academy`, `Course`, `Review`, `User`), envelopes, payloads, `ListParams`                                                               |
 | `lib/`               | `cn`, `toQueryString`, `getPhotoUrl`, `formatCurrency/Date/Rating`, `TONE_CHIP_CLASSES`                                                                  |
@@ -212,5 +212,5 @@ In `app/router.tsx`, inside the layout's inner `children`:
 },
 ```
 
-Add the path to `ROUTE_PATHS`/`ROUTES` in `constants/routes.ts` first, and to `MAIN_NAV` if it
+Add the path to `ROUTE_PATHS`/`ROUTES` in `constants/routes.ts` first, and to `GUEST_NAV` / `SIGNED_IN_NAV` if it
 belongs in the header.

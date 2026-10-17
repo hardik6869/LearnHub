@@ -9,7 +9,7 @@ import {
 } from "@/components/common";
 import { Button } from "@/components/ui";
 import { canManage, useCurrentUser } from "@/features/auth";
-import { cn, getGridColumns } from "@/lib";
+import { CARD_GRID } from "@/lib";
 import type { Academy, Course } from "@/types";
 import { useAcademyCourses } from "../hooks/useAcademyCourses";
 import { useCreateCourse, useDeleteCourse, useUpdateCourse } from "../hooks/useCourseMutations";
@@ -69,7 +69,7 @@ export function CourseList({ academy }: { academy: Academy }) {
       );
     }
     return (
-      <ul className={cn("grid grid-cols-1 gap-4", getGridColumns(data.data.length))}>
+      <ul className={CARD_GRID}>
         {data.data.map((course) => (
           <li key={course._id}>
             <CourseCard

@@ -88,7 +88,7 @@ export const router = createBrowserRouter([
                 }),
               },
 
-              // The dashboard area: its own navigation beside every page below
+              // The signed-in home: tabs above every page below
               {
                 path: ROUTE_PATHS.dashboard,
                 lazy: async () => ({
@@ -101,13 +101,6 @@ export const router = createBrowserRouter([
                     lazy: async () => ({
                       Component: (await import("@/features/dashboard/pages/DashboardPage"))
                         .DashboardPage,
-                    }),
-                  },
-                  {
-                    path: ROUTE_PATHS.dashboardAnalytics,
-                    lazy: async () => ({
-                      Component: (await import("@/features/dashboard/pages/AnalyticsPage"))
-                        .AnalyticsPage,
                     }),
                   },
                   {

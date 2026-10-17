@@ -5,7 +5,7 @@ import { EmptyState, ErrorState, LoadingState, PageHeader } from "@/components/c
 import { Button } from "@/components/ui";
 import { ROUTES } from "@/constants";
 import { ReviewCard, useUserReviews } from "@/features/reviews";
-import { cn, formatDate, getGridColumns } from "@/lib";
+import { formatDate, REVIEW_GRID } from "@/lib";
 import type { Review, User } from "@/types";
 
 // "Academy name · date"; the list endpoint populates the academy. Reviews are edited on the
@@ -49,7 +49,7 @@ export function MyReviews({ user }: { user: User }) {
       );
     }
     return (
-      <ul className={cn("grid grid-cols-1 gap-4", getGridColumns(count, 2))}>
+      <ul className={REVIEW_GRID}>
         {data.data.map((review) => (
           <li key={review._id}>
             <ReviewCard review={review} subtitle={renderSubtitle(review)} />

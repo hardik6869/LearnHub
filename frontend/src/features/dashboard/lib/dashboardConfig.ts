@@ -35,11 +35,8 @@ export interface ChartItem {
 
 interface RoleDashboard {
   kpis: KpiItem[];
-  /** The first OVERVIEW_CHART_COUNT also show on the overview; all show on analytics */
   charts: ChartItem[];
 }
-
-export const OVERVIEW_CHART_COUNT = 2;
 
 const fromLabels =
   (labels: Record<string, string>) =>

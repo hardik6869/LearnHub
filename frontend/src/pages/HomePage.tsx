@@ -1,11 +1,10 @@
-import { ArrowRight, Building2, MessageSquare, Search } from "lucide-react";
-import { Link } from "react-router";
-import { Container } from "@/components/common";
-import { Button } from "@/components/ui";
+import { Building2, MessageSquare, Search } from "lucide-react";
+import { Link, Navigate } from "react-router";
+import { Container, PageLoading } from "@/components/common";
 import { APP_NAME, ROUTES } from "@/constants";
 import { CAREERS } from "@/enums";
 import { AcademySearchForm, LatestAcademies } from "@/features/academies";
-import { ACADEMY_MANAGER_ROLES, hasRole, useCurrentUser } from "@/features/auth";
+import { useCurrentUser } from "@/features/auth";
 import { useDocumentTitle } from "@/hooks";
 import { cn, TONE_CHIP_CLASSES } from "@/lib";
 
@@ -36,10 +35,14 @@ const POPULAR_CAREERS = CAREERS.filter((career) => career !== "Other");
 const careerUrl = (career: string) =>
   `${ROUTES.academies}?${new URLSearchParams({ career }).toString()}`;
 
+// The public landing page for visitors who aren't signed in
 export function HomePage() {
   useDocumentTitle();
-  const { user } = useCurrentUser();
-  const isManager = hasRole(user, ACADEMY_MANAGER_ROLES);
+  const { user, isLoading } = useCurrentUser();
+
+  // Signed-in users have no separate home: their dashboard is it
+  if (isLoading) return <PageLoading />;
+  if (user) return <Navigate to={ROUTES.dashboard} replace />;
 
   return (
     <>
@@ -98,33 +101,6 @@ export function HomePage() {
         </section>
 
         <LatestAcademies />
-
-        {/* For academy owners; students have nothing to list */}
-        {(!user || isManager) && (
-          <section
-            aria-labelledby="publish-heading"
-            className="flex flex-col gap-4 rounded-xl bg-primary p-6 text-primary-foreground sm:flex-row sm:items-center sm:justify-between sm:p-8"
-          >
-            <div className="space-y-1">
-              <h2 id="publish-heading" className="text-xl font-semibold tracking-tight">
-                Run an academy?
-              </h2>
-              <p>List it on {APP_NAME} so students can find it, compare it and review it.</p>
-            </div>
-            {/* The default focus ring is the primary colour, invisible on this band */}
-            <Button
-              size="lg"
-              variant="secondary"
-              className="shrink-0 focus-visible:border-primary-foreground focus-visible:ring-primary-foreground/60"
-              asChild
-            >
-              <Link to={isManager ? ROUTES.dashboardAcademies : ROUTES.register}>
-                {isManager ? "Manage my academies" : "Get started"}
-                <ArrowRight aria-hidden />
-              </Link>
-            </Button>
-          </section>
-        )}
       </Container>
     </>
   );

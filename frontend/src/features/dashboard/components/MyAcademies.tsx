@@ -2,7 +2,7 @@ import { Building2 } from "lucide-react";
 import { EmptyState, ErrorState, LoadingState, PageHeader } from "@/components/common";
 import { USER_ROLES } from "@/enums";
 import { AcademyCard, AddAcademyButton, useAcademies } from "@/features/academies";
-import { cn, getGridColumns } from "@/lib";
+import { CARD_GRID } from "@/lib";
 import type { User } from "@/types";
 
 // The academies the user owns, with the page header. Publishers may own one, so "Add academy"
@@ -25,7 +25,7 @@ export function MyAcademies({ user }: { user: User }) {
       );
     }
     return (
-      <ul className={cn("grid grid-cols-1 gap-4", getGridColumns(count))}>
+      <ul className={CARD_GRID}>
         {data.data.map((academy) => (
           <li key={academy._id}>
             <AcademyCard academy={academy} />

@@ -1,11 +1,4 @@
-import {
-  BarChart3,
-  Building2,
-  LayoutDashboard,
-  type LucideIcon,
-  MessageSquare,
-  Users,
-} from "lucide-react";
+import { Building2, LayoutDashboard, type LucideIcon, MessageSquare, Users } from "lucide-react";
 import { ROUTES } from "@/constants";
 import type { UserRole } from "@/enums";
 import { ACADEMY_MANAGER_ROLES, ADMIN_ROLES, REVIEWER_ROLES } from "@/features/auth";
@@ -18,10 +11,9 @@ export interface DashboardNavItem {
   roles?: readonly UserRole[];
 }
 
-// The dashboard's sidebar (desktop) and tab row (phones). The router guards the same roles.
+// The dashboard tabs. The router guards the same roles.
 export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
   { label: "Overview", to: ROUTES.dashboard, icon: LayoutDashboard },
-  { label: "Analytics", to: ROUTES.dashboardAnalytics, icon: BarChart3 },
   {
     label: "My academies",
     to: ROUTES.dashboardAcademies,
