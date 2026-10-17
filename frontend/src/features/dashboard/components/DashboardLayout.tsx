@@ -14,7 +14,8 @@ export function DashboardLayout() {
   return (
     <Container className="space-y-6 py-6">
       <nav aria-label="Dashboard" className="border-b">
-        <ul className="-mx-4 flex gap-1 overflow-x-auto px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
+        {/* overflow-y-hidden: a sideways-scrolling row would otherwise also scroll vertically */}
+        <ul className="-mx-4 flex gap-1 overflow-x-auto overflow-y-hidden px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
           {items.map(({ label, to, icon: Icon }) => (
             <li key={to} className="shrink-0">
               <NavLink
@@ -23,7 +24,8 @@ export function DashboardLayout() {
                 end={to === ROUTES.dashboard}
                 className={({ isActive }) =>
                   cn(
-                    "-mb-px flex items-center gap-2 border-b-2 px-3 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-foreground",
+                    // The focus ring is inset so the row's overflow doesn't clip it
+                    "flex items-center gap-2 rounded-t-md border-b-2 px-3 py-2.5 text-sm font-medium whitespace-nowrap transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
                     // A thick underline and weight as well as colour (WCAG 1.4.1); NavLink sets
                     // aria-current
                     isActive
